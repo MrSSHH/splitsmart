@@ -1,0 +1,12 @@
+{
+  "name": "splitsmart",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev:mobile": "pnpm --filter mobile start",
+    "dev:api": "pnpm --filter api start:dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "format": "pnpm -r format"
+  }
+}
