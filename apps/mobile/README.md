@@ -1,50 +1,44 @@
-# Welcome to your Expo app 👋
+<h1>SplitSmart</h1>
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+<p>SplitSmart is a mobile-first expense sharing app built with Expo and React Native.</p>
 
-## Get started
+<h2>Current Status</h2>
+<p>Early development phase.</p>
 
-1. Install dependencies
+<p>So far:</p>
+<ul>
+  <li>Basic project structure</li>
+  <li>Login screen UI</li>
+  <li>Reusable button component</li>
+  <li>Dark theme color palette</li>
+</ul>
 
-   ```bash
-   npm install
-   ```
+<h2>Tech Stack</h2>
+<ul>
+  <li>Expo (React Native)</li>
+  <li>TypeScript</li>
+  <li>pnpm</li>
+</ul>
 
-2. Start the app
+<h2>Project Structure</h2>
+<pre><code>apps/
+  mobile/   # Expo mobile app
+  api/      # NestJS backend (in progress)
+</code></pre>
 
-   ```bash
-   npx expo start
-   ```
+<h2>Goal</h2>
+<p>Build a clean and scalable expense-sharing app where users can:</p>
+<ul>
+  <li>Create groups</li>
+  <li>Add shared expenses</li>
+  <li>Track balances</li>
+  <li>Settle debts efficiently</li>
+</ul>
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+<h2>Notes</h2>
+<p>This project is being built step by step to improve:</p>
+<ul>
+  <li>Mobile development with Expo</li>
+  <li>Clean architecture</li>
+  <li>UI and UX fundamentals</li>
+</ul>
