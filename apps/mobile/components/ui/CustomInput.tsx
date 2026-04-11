@@ -1,4 +1,4 @@
-import { theme } from "@/src/constants/colors";
+import { theme } from "@/constants/colors";
 import { TextInput, StyleSheet, View } from "react-native";
 type Props = {
   placeholder: string;
@@ -15,6 +15,9 @@ export default function CustomInput({
         secureTextEntry={censorInput}
         placeholderTextColor={theme.colors.textMuted}
         style={styles.input}
+        importantForAutofill="yes"
+        autoCorrect={false}
+        keyboardAppearance="dark"
       />
     </View>
   );

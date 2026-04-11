@@ -1,4 +1,4 @@
-import { theme } from "@/src/constants/colors";
+import { theme } from "@/constants/colors";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type Props = {
