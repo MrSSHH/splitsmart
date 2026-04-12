@@ -6,6 +6,7 @@ import {
   Keyboard,
   Text,
   Platform,
+  ScrollView,
 } from "react-native";
 import { theme } from "@/constants/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -16,18 +17,26 @@ export default function Login() {
     <SafeAreaView style={styles.screen}>
       <KeyboardAvoidingView
         style={styles.screen}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior={Platform.OS === "ios" ? "padding" : "padding"}
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View style={styles.loginContainer}>
-            <View style={styles.header}>
-              <Text style={styles.title}>SplitSmart</Text>
-              <Text style={styles.subtitle}>
-                Manage shared expenses effortlessly
-              </Text>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            keyboardShouldPersistTaps="handled"
+            contentContainerStyle={styles.scrollContent}
+          >
+            <View style={{ flex: 1 }}>
+              <View style={styles.header}>
+                <Text style={styles.title}>SplitSmart</Text>
+                <Text style={styles.subtitle}>
+                  Manage shared expenses effortlessly
+                </Text>
+              </View>
+              <View style={{ justifyContent: "center", flex: 1 }}>
+                <LoginForm />
+              </View>
             </View>
-            <LoginForm />
-          </View>
+          </ScrollView>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -39,11 +48,15 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  loginContainer: {
-    flex: 1,
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center", // centers everything vertically when keyboard is closed
+    padding: 16,
   },
+
   header: {
     alignItems: "center",
+    marginTop: 30,
   },
 
   title: {

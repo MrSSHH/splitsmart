@@ -13,10 +13,7 @@ import { useState } from "react";
 export default function LoginForm() {
   const [isPasswordVisble, setIsPasswordVisble] = useState(false);
   return (
-    <KeyboardAvoidingView
-      style={styles.screen}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
+    <View>
       <View style={styles.LoginFormContainer}>
         <Text
           style={{
@@ -47,29 +44,22 @@ export default function LoginForm() {
           label="Login"
           onPress={() => console.log("Pressed !")}
         />
-
-        <Text style={styles.labelSecondary}>
-          Don&apos;t have an account?{" "}
-          <Text style={{ color: theme.colors.primary, fontWeight: "bold" }}>
-            Sign up
-          </Text>
-        </Text>
       </View>
-    </KeyboardAvoidingView>
+
+      <Text style={styles.labelSecondary}>
+        Don&apos;t have an account?{" "}
+        <Text style={{ color: theme.colors.primary, fontWeight: "bold" }}>
+          Sign up
+        </Text>
+      </Text>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  safeArea: { flex: 1, backgroundColor: theme.colors.background },
-  screen: {
-    flex: 1,
-    padding: 12,
-    justifyContent: "center",
-  },
-
   inputLabel: {
     color: theme.colors.textSecondary,
-    paddingBottom: 10,
+    paddingBottom: 4,
     fontSize: 13,
     textTransform: "uppercase",
     marginLeft: 4,
@@ -82,6 +72,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   LoginFormContainer: {
+    justifyContent: "center",
     backgroundColor: theme.colors.card,
     borderRadius: 24,
     padding: 24,
