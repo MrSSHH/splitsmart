@@ -1,5 +1,5 @@
 import { theme } from "@/constants/colors";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, Text } from "react-native";
 
 type Props = {
   label: string;
@@ -17,7 +17,7 @@ export default function Button({ label, DesiredTheme, onPress }: Props) {
               ? theme.colors.primaryPressed
               : theme.colors.primary,
             opacity: pressed ? 0.8 : 1, // Dims slightly when pressed
-            padding: 16,
+            padding: 10,
             borderRadius: 12,
             alignItems: "center",
           },

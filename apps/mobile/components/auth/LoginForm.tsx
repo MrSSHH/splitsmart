@@ -1,11 +1,5 @@
 import { theme } from "@/constants/colors";
-import {
-  View,
-  Text,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import Button from "../ui/Button";
 import CustomInput from "../ui/CustomInput";
 import { useState } from "react";
@@ -20,7 +14,7 @@ export default function LoginForm() {
             color: theme.colors.textPrimary,
             fontSize: 22,
             fontWeight: "bold",
-            marginBottom: 8,
+            marginBottom: 4,
           }}
         >
           Secure Login
@@ -29,7 +23,7 @@ export default function LoginForm() {
           style={{
             color: theme.colors.textSecondary,
             fontSize: 14,
-            marginBottom: 24,
+            marginBottom: 14,
           }}
         >
           Enter your credentials to access your account.
@@ -38,7 +32,11 @@ export default function LoginForm() {
         <CustomInput placeholder="you@example.com" />
         <Text style={styles.inputLabel}>Password</Text>
 
-        <CustomInput placeholder="••••••••" censorInput={true} />
+        <CustomInput
+          placeholder="••••••••"
+          censorInput={true}
+          ionIcon="eye-outline"
+        />
         <Button
           DesiredTheme="primary"
           label="Login"
@@ -63,7 +61,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     textTransform: "uppercase",
     marginLeft: 4,
-    fontWeight: 700,
+    fontWeight: "700",
     letterSpacing: 1,
   },
   labelSecondary: {

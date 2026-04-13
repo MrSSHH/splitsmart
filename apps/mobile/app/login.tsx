@@ -32,7 +32,7 @@ export default function Login() {
                   Manage shared expenses effortlessly
                 </Text>
               </View>
-              <View style={{ justifyContent: "center", flex: 1 }}>
+              <View style={{ flex: 1 }}>
                 <LoginForm />
               </View>
             </View>
@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
 
   header: {
     alignItems: "center",
-    marginTop: 30,
+    marginBottom: 20,
   },
 
   title: {
