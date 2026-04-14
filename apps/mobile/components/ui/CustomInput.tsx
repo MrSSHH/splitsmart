@@ -69,30 +69,27 @@ const styles = StyleSheet.create({
   container: {
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: theme.colors.border, // #1F2933
+    borderColor: theme.colors.border,
     borderRadius: 12,
-    padding: Platform.OS === "ios" ? 18 : 12,
-
+    // Use paddingVertical instead of general padding to avoid
+    // pinching the sides twice (container + input)
+    paddingVertical: Platform.OS === "ios" ? 18 : 9,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: theme.colors.inputBackground,
-    paddingHorizontal: 10, // Padding inside the box
-  },
-  icon: {
-    marginRight: 10,
+    paddingHorizontal: 12,
+    // Crucial: allow the container to grow if used in a flex row
+    flex: 1,
   },
   input: {
-    backgroundColor: theme.colors.inputBackground, // #090D11
-    color: theme.colors.textPrimary, // #E6EDF3
-    borderRadius: 12,
-    alignItems: "center", // Vertically centers the icon
-    paddingHorizontal: 15, // Padding for the whole box
-    flex: 1,
+    color: theme.colors.textPrimary,
+    flex: 1, // Takes up all space between icons
     fontSize: 16,
-
-    shadowColor: theme.colors.primary,
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0, // We will trigger this on focus if desired
-    shadowRadius: 4,
+    // Remove extra padding here if your container already has paddingHorizontal
+    paddingHorizontal: 5,
+  },
+  icon: {
+    // Keep icons from hugging the edges
+    marginLeft: 5,
   },
 });

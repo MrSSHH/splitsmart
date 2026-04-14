@@ -4,7 +4,7 @@ import Button from "../ui/Button";
 import CustomInput from "../ui/CustomInput";
 import { useRouter } from "expo-router";
 
-export default function LoginForm() {
+export default function RegisterForm() {
   const router = useRouter();
   return (
     <View>
@@ -17,7 +17,7 @@ export default function LoginForm() {
             marginBottom: 4,
           }}
         >
-          Secure Login
+          Create an account
         </Text>
         <Text
           style={{
@@ -26,27 +26,40 @@ export default function LoginForm() {
             marginBottom: 14,
           }}
         >
-          Enter your credentials to access your account.
+          Fill in your details to get started.
         </Text>
+        <View style={{ flexDirection: "row", gap: 12 }}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.inputLabel}>First name</Text>
+            <CustomInput placeholder="Jane" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.inputLabel}>Last name</Text>
+            <CustomInput placeholder="Doe" />
+          </View>
+        </View>
         <Text style={styles.inputLabel}>Email</Text>
         <CustomInput placeholder="you@example.com" />
-        <Text style={styles.inputLabel}>Password</Text>
 
+        <Text style={styles.inputLabel}>Password</Text>
         <CustomInput placeholder="••••••••" censorInput={true} />
+        <Text style={styles.inputLabel}>Confirm password</Text>
+        <CustomInput placeholder="••••••••" censorInput={true} />
+
         <Button
           DesiredTheme="primary"
-          label="Login"
+          label="Register"
           onPress={() => console.log("Pressed !")}
         />
       </View>
 
       <Text style={styles.labelSecondary}>
-        Don&apos;t have an account?{" "}
+        Have an account already?{" "}
         <Text
           style={{ color: theme.colors.primary, fontWeight: "bold" }}
-          onPress={() => router.push("/register")}
+          onPress={() => router.push("/login")}
         >
-          Sign up
+          Sign in
         </Text>
       </Text>
     </View>

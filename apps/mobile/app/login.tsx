@@ -12,33 +12,29 @@ import { theme } from "@/constants/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import LoginForm from "@/components/auth/LoginForm";
+import { KeyboardAwareScrollView } from "react-native-keyboard-controller";
 export default function Login() {
   return (
     <SafeAreaView style={styles.screen}>
-      <KeyboardAvoidingView
-        style={styles.screen}
-        behavior={Platform.OS === "ios" ? "padding" : "padding"}
-      >
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-            contentContainerStyle={styles.scrollContent}
-          >
-            <View style={{ flex: 1 }}>
-              <View style={styles.header}>
-                <Text style={styles.title}>SplitSmart</Text>
-                <Text style={styles.subtitle}>
-                  Manage shared expenses effortlessly
-                </Text>
-              </View>
-              <View style={{ flex: 1 }}>
-                <LoginForm />
-              </View>
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <KeyboardAwareScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={styles.scrollContent}
+        >
+          <View style={{ flex: 1 }}>
+            <View style={styles.header}>
+              <Text style={styles.title}>SplitSmart</Text>
+              <Text style={styles.subtitle}>
+                Manage shared expenses effortlessly
+              </Text>
             </View>
-          </ScrollView>
-        </TouchableWithoutFeedback>
-      </KeyboardAvoidingView>
+            <View style={{ flex: 1 }}>
+              <LoginForm />
+            </View>
+          </View>
+        </KeyboardAwareScrollView>
+      </TouchableWithoutFeedback>
     </SafeAreaView>
   );
 }
