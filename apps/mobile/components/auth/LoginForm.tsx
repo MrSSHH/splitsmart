@@ -3,8 +3,11 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import Button from "../ui/Button";
 import CustomInput from "../ui/CustomInput";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 
 export default function LoginForm() {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const router = useRouter();
   return (
     <View>
@@ -29,10 +32,19 @@ export default function LoginForm() {
           Enter your credentials to access your account.
         </Text>
         <Text style={styles.inputLabel}>Email</Text>
-        <CustomInput placeholder="you@example.com" />
+        <CustomInput
+          inputValue={email}
+          inputSetValue={setEmail}
+          placeholder="you@example.com"
+        />
         <Text style={styles.inputLabel}>Password</Text>
 
-        <CustomInput placeholder="••••••••" censorInput={true} />
+        <CustomInput
+          inputSetValue={setPassword}
+          placeholder="••••••••"
+          inputValue={password}
+          censorInput={true}
+        />
         <Button
           DesiredTheme="primary"
           label="Login"

@@ -1,21 +1,32 @@
 import { theme } from "@/constants/colors";
-import { TextInput, StyleSheet, View, Platform } from "react-native";
+import {
+  TextInput,
+  StyleSheet,
+  View,
+  Platform,
+  KeyboardTypeOptions,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ComponentProps, useState } from "react";
 type Props = {
   placeholder: string;
   censorInput?: boolean;
   ionIcon?: ComponentProps<typeof Ionicons>["name"];
+  inputSetValue: React.Dispatch<React.SetStateAction<string>>;
+  inputValue: string;
+  keyboardType?: KeyboardTypeOptions;
 };
 export default function CustomInput({
   placeholder,
   censorInput = false,
   ionIcon = undefined,
+  inputSetValue,
+  inputValue,
+  keyboardType = "default",
 }: Props) {
   const [hideContent, setHideContent] = useState<boolean>(true);
   const [hideContentIcon, setHideContentIcon] =
     useState<ComponentProps<typeof Ionicons>["name"]>("eye-outline");
-  const [onFocus, setOnFocus] = useState<boolean>(false);
 
   if (censorInput) {
     return (
@@ -25,8 +36,11 @@ export default function CustomInput({
           secureTextEntry={hideContent}
           placeholderTextColor={theme.colors.textMuted}
           style={[styles.input, !ionIcon && { paddingLeft: 5 }]}
-          onFocus={() => setOnFocus(true)}
-          onBlur={() => setOnFocus(false)}
+          value={inputValue}
+          keyboardType={keyboardType}
+          onChangeText={(text) => {
+            inputSetValue(text);
+          }}
           importantForAutofill="yes"
           autoCorrect={false}
           keyboardAppearance="dark"
@@ -58,6 +72,10 @@ export default function CustomInput({
         style={[styles.input, !ionIcon && { paddingLeft: 5 }]}
         importantForAutofill="yes"
         autoCorrect={false}
+        value={inputValue}
+        onChangeText={(text) => {
+          inputSetValue(text);
+        }}
         keyboardAppearance="dark"
       />
 
@@ -73,7 +91,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     // Use paddingVertical instead of general padding to avoid
     // pinching the sides twice (container + input)
-    paddingVertical: Platform.OS === "ios" ? 18 : 9,
+    paddingVertical: Platform.OS === "ios" ? 18 : 4,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: theme.colors.inputBackground,

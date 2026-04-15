@@ -12,6 +12,7 @@ export default function SignUp() {
         <KeyboardAwareScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
+          extraKeyboardSpace={60}
           showsVerticalScrollIndicator={false}
         >
           <RegisterForm />

@@ -3,8 +3,15 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import Button from "../ui/Button";
 import CustomInput from "../ui/CustomInput";
 import { useRouter } from "expo-router";
+import { useState } from "react";
 
 export default function RegisterForm() {
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
   const router = useRouter();
   return (
     <View>
@@ -31,20 +38,44 @@ export default function RegisterForm() {
         <View style={{ flexDirection: "row", gap: 12 }}>
           <View style={{ flex: 1 }}>
             <Text style={styles.inputLabel}>First name</Text>
-            <CustomInput placeholder="Jane" />
+            <CustomInput
+              inputValue={firstName}
+              inputSetValue={setFirstName}
+              placeholder="Jane"
+            />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.inputLabel}>Last name</Text>
-            <CustomInput placeholder="Doe" />
+            <CustomInput
+              inputValue={lastName}
+              inputSetValue={setLastName}
+              placeholder="Doe"
+            />
           </View>
         </View>
         <Text style={styles.inputLabel}>Email</Text>
-        <CustomInput placeholder="you@example.com" />
+        <CustomInput
+          inputValue={email}
+          keyboardType="email-address"
+          inputSetValue={setEmail}
+          placeholder="you@example.com"
+        />
 
         <Text style={styles.inputLabel}>Password</Text>
-        <CustomInput placeholder="••••••••" censorInput={true} />
+        <CustomInput
+          inputValue={password}
+          inputSetValue={setPassword}
+          placeholder="••••••••"
+          keyboardType="email-address"
+          censorInput={true}
+        />
         <Text style={styles.inputLabel}>Confirm password</Text>
-        <CustomInput placeholder="••••••••" censorInput={true} />
+        <CustomInput
+          inputValue={confirmPassword}
+          inputSetValue={setConfirmPassword}
+          placeholder="••••••••"
+          censorInput={true}
+        />
 
         <Button
           DesiredTheme="primary"

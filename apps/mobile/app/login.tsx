@@ -2,11 +2,8 @@ import {
   View,
   StyleSheet,
   TouchableWithoutFeedback,
-  KeyboardAvoidingView,
   Keyboard,
   Text,
-  Platform,
-  ScrollView,
 } from "react-native";
 import { theme } from "@/constants/colors";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -20,6 +17,7 @@ export default function Login() {
         <KeyboardAwareScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          extraKeyboardSpace={60}
           contentContainerStyle={styles.scrollContent}
         >
           <View style={{ flex: 1 }}>
