@@ -14,6 +14,7 @@ type Props = {
   ionIcon?: ComponentProps<typeof Ionicons>["name"];
   inputSetValue: React.Dispatch<React.SetStateAction<string>>;
   inputValue: string;
+  inputOnBlur: () => void;
   keyboardType?: KeyboardTypeOptions;
 };
 export default function CustomInput({
@@ -22,6 +23,7 @@ export default function CustomInput({
   ionIcon = undefined,
   inputSetValue,
   inputValue,
+  inputOnBlur,
   keyboardType = "default",
 }: Props) {
   const [hideContent, setHideContent] = useState<boolean>(true);
@@ -37,10 +39,9 @@ export default function CustomInput({
           placeholderTextColor={theme.colors.textMuted}
           style={[styles.input, !ionIcon && { paddingLeft: 5 }]}
           value={inputValue}
+          onBlur={inputOnBlur}
           keyboardType={keyboardType}
-          onChangeText={(text) => {
-            inputSetValue(text);
-          }}
+          onChangeText={inputSetValue}
           importantForAutofill="yes"
           autoCorrect={false}
           keyboardAppearance="dark"

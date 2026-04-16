@@ -3,16 +3,30 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import Button from "../ui/Button";
 import CustomInput from "../ui/CustomInput";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { signUpSchema } from "../../schemas/authSchemas";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-export default function RegisterForm() {
-  const [firstName, setFirstName] = useState<string>("");
-  const [lastName, setLastName] = useState<string>("");
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [confirmPassword, setConfirmPassword] = useState<string>("");
-
+export default function registerForm() {
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+    },
+  });
   const router = useRouter();
+  const onRegister = (data: any) => {
+    console.log("Success! Sending to server:", data);
+
+    //  API call or navigation
+  };
   return (
     <View>
       <View style={styles.LoginFormContainer}>
@@ -38,49 +52,84 @@ export default function RegisterForm() {
         <View style={{ flexDirection: "row", gap: 12 }}>
           <View style={{ flex: 1 }}>
             <Text style={styles.inputLabel}>First name</Text>
-            <CustomInput
-              inputValue={firstName}
-              inputSetValue={setFirstName}
-              placeholder="Jane"
+            <Controller
+              name="firstName"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <CustomInput
+                  placeholder="Jane"
+                  inputOnBlur={onBlur}
+                  inputSetValue={onChange}
+                  inputValue={value}
+                />
+              )}
             />
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.inputLabel}>Last name</Text>
-            <CustomInput
-              inputValue={lastName}
-              inputSetValue={setLastName}
-              placeholder="Doe"
+            <Controller
+              name="lastName"
+              control={control}
+              render={({ field: { onChange, onBlur, value } }) => (
+                <CustomInput
+                  placeholder="Doe"
+                  inputOnBlur={onBlur}
+                  inputSetValue={onChange}
+                  inputValue={value}
+                />
+              )}
             />
           </View>
         </View>
         <Text style={styles.inputLabel}>Email</Text>
-        <CustomInput
-          inputValue={email}
-          keyboardType="email-address"
-          inputSetValue={setEmail}
-          placeholder="you@example.com"
+        <Controller
+          name="email"
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <CustomInput
+              placeholder="you@example.com"
+              inputOnBlur={onBlur}
+              inputSetValue={onChange}
+              keyboardType="email-address"
+              inputValue={value}
+            />
+          )}
         />
 
         <Text style={styles.inputLabel}>Password</Text>
-        <CustomInput
-          inputValue={password}
-          inputSetValue={setPassword}
-          placeholder="••••••••"
-          keyboardType="email-address"
-          censorInput={true}
+        <Controller
+          name="password"
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <CustomInput
+              placeholder="••••••••"
+              inputOnBlur={onBlur}
+              inputSetValue={onChange}
+              censorInput={true}
+              inputValue={value}
+            />
+          )}
         />
+
         <Text style={styles.inputLabel}>Confirm password</Text>
-        <CustomInput
-          inputValue={confirmPassword}
-          inputSetValue={setConfirmPassword}
-          placeholder="••••••••"
-          censorInput={true}
+        <Controller
+          name="confirmPassword"
+          control={control}
+          render={({ field: { onChange, onBlur, value } }) => (
+            <CustomInput
+              placeholder="••••••••"
+              inputOnBlur={onBlur}
+              inputSetValue={onChange}
+              censorInput={true}
+              inputValue={value}
+            />
+          )}
         />
 
         <Button
           DesiredTheme="primary"
           label="Register"
-          onPress={() => console.log("Pressed !")}
+          onPress={handleSubmit(onRegister)}
         />
       </View>
 
