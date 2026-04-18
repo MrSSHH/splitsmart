@@ -10,20 +10,23 @@ import { Ionicons } from "@expo/vector-icons";
 import { ComponentProps, useState } from "react";
 type Props = {
   placeholder: string;
-  censorInput?: boolean;
   ionIcon?: ComponentProps<typeof Ionicons>["name"];
   inputSetValue: React.Dispatch<React.SetStateAction<string>>;
   inputValue: string;
   inputOnBlur: () => void;
+  capitalizeFirstLetter?: boolean;
+  censorInput?: boolean;
   keyboardType?: KeyboardTypeOptions;
 };
 export default function CustomInput({
   placeholder,
-  censorInput = false,
-  ionIcon = undefined,
+
   inputSetValue,
   inputValue,
   inputOnBlur,
+  capitalizeFirstLetter = true,
+  censorInput = false,
+  ionIcon = undefined,
   keyboardType = "default",
 }: Props) {
   const [hideContent, setHideContent] = useState<boolean>(true);
@@ -35,6 +38,7 @@ export default function CustomInput({
       <View style={styles.container}>
         <TextInput
           placeholder={placeholder}
+          autoCapitalize={capitalizeFirstLetter ? "sentences" : "none"}
           secureTextEntry={hideContent}
           placeholderTextColor={theme.colors.textMuted}
           style={[styles.input, !ionIcon && { paddingLeft: 5 }]}
@@ -74,6 +78,7 @@ export default function CustomInput({
         importantForAutofill="yes"
         autoCorrect={false}
         value={inputValue}
+        autoCapitalize={capitalizeFirstLetter ? "sentences" : "none"}
         onChangeText={(text) => {
           inputSetValue(text);
         }}

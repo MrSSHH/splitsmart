@@ -24,7 +24,7 @@ export default function LoginForm() {
   });
 
   const onSubmit = (data: any) => {
-    console.table(data);
+    console.log(data);
   };
 
   const router = useRouter();
@@ -59,6 +59,7 @@ export default function LoginForm() {
               <CustomInput
                 placeholder="you@example.com"
                 inputOnBlur={onBlur}
+                capitalizeFirstLetter={false}
                 inputSetValue={onChange}
                 inputValue={value}
               />

@@ -111,6 +111,7 @@ export default function RegisterForm() {
             render={({ field: { onChange, onBlur, value } }) => (
               <CustomInput
                 placeholder="you@example.com"
+                capitalizeFirstLetter={false}
                 inputOnBlur={onBlur}
                 inputSetValue={onChange}
                 keyboardType="email-address"
