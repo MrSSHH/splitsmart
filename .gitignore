@@ -1,1 +1,109 @@
-node_modules
+# =========================
+# Dependencies
+# =========================
+node_modules/
+
+# =========================
+# Build / Compiled Output
+# =========================
+dist/
+build/
+web-build/
+coverage/
+.nyc_output/
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# =========================
+# Runtime Data
+# =========================
+pids/
+*.pid
+*.pid.lock
+*.seed
+
+# =========================
+# Temp Files
+# =========================
+.temp/
+.tmp/
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# OS Files
+# =========================
+.DS_Store
+
+# =========================
+# IDE / Editor
+# =========================
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+.project
+.classpath
+.settings/
+.c9/
+*.launch
+*.sublime-workspace
+
+# =========================
+# TypeScript
+# =========================
+*.tsbuildinfo
+
+# =========================
+# Expo
+# =========================
+.expo/
+expo-env.d.ts
+
+# =========================
+# Metro
+# =========================
+.metro-health-check*
+
+# =========================
+# Native / Mobile
+# =========================
+ios/
+android/
+.kotlin/
+
+# Signing / Keys (sensitive)
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.pem
+
+# =========================
+# Misc
+# =========================
+*.orig.*
+
+# Diagnostic reports
+report.*.json
+
+# Example / Demo App
+app-example/
