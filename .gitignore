@@ -107,3 +107,6 @@ report.*.json
 
 # Example / Demo App
 app-example/
+
+
+package-lock.json
