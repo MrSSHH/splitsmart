@@ -7,7 +7,7 @@ import { Controller, useForm } from "react-hook-form";
 import { signUpSchema } from "../../schemas/authSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-export default function registerForm() {
+export default function RegisterForm() {
   const {
     control,
     handleSubmit,
@@ -19,38 +19,35 @@ export default function registerForm() {
       lastName: "",
       email: "",
       password: "",
+      confirmPassword: "",
     },
+    mode: "onChange",
+    reValidateMode: "onChange",
   });
+
   const router = useRouter();
+
   const onRegister = (data: any) => {
     console.log("Success! Sending to server:", data);
-
-    //  API call or navigation
   };
+
   return (
     <View>
       <View style={styles.LoginFormContainer}>
-        <Text
-          style={{
-            color: theme.colors.textPrimary,
-            fontSize: 22,
-            fontWeight: "bold",
-            marginBottom: 4,
-          }}
-        >
-          Create an account
-        </Text>
-        <Text
-          style={{
-            color: theme.colors.textSecondary,
-            fontSize: 14,
-            marginBottom: 14,
-          }}
-        >
+        <Text style={styles.title}>Create an account</Text>
+        <Text style={styles.subtitle}>
           Fill in your details to get started.
         </Text>
-        <View style={{ flexDirection: "row", gap: 12 }}>
-          <View style={{ flex: 1 }}>
+
+        <View style={styles.nameRow}>
+          <View
+            style={[
+              styles.halfField,
+              errors.firstName && {
+                marginBottom: 16,
+              },
+            ]}
+          >
             <Text style={styles.inputLabel}>First name</Text>
             <Controller
               name="firstName"
@@ -64,8 +61,21 @@ export default function registerForm() {
                 />
               )}
             />
+            <View style={{ minHeight: 20 }}>
+              {errors.firstName && (
+                <Text style={styles.errorText}>{errors.firstName.message}</Text>
+              )}
+            </View>
           </View>
-          <View style={{ flex: 1 }}>
+
+          <View
+            style={[
+              styles.halfField,
+              errors.firstName && {
+                marginBottom: 16,
+              },
+            ]}
+          >
             <Text style={styles.inputLabel}>Last name</Text>
             <Controller
               name="lastName"
@@ -79,52 +89,99 @@ export default function registerForm() {
                 />
               )}
             />
+            <View style={{ minHeight: 20 }}>
+              {errors.lastName && (
+                <Text style={styles.errorText}>{errors.lastName.message}</Text>
+              )}
+            </View>
           </View>
         </View>
-        <Text style={styles.inputLabel}>Email</Text>
-        <Controller
-          name="email"
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <CustomInput
-              placeholder="you@example.com"
-              inputOnBlur={onBlur}
-              inputSetValue={onChange}
-              keyboardType="email-address"
-              inputValue={value}
-            />
-          )}
-        />
 
-        <Text style={styles.inputLabel}>Password</Text>
-        <Controller
-          name="password"
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <CustomInput
-              placeholder="••••••••"
-              inputOnBlur={onBlur}
-              inputSetValue={onChange}
-              censorInput={true}
-              inputValue={value}
-            />
-          )}
-        />
+        <View
+          style={
+            errors.email && {
+              marginBottom: 16,
+            }
+          }
+        >
+          <Text style={styles.inputLabel}>Email</Text>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                placeholder="you@example.com"
+                inputOnBlur={onBlur}
+                inputSetValue={onChange}
+                keyboardType="email-address"
+                inputValue={value}
+              />
+            )}
+          />
+          <View style={{ minHeight: 20 }}>
+            {errors.email && (
+              <Text style={styles.errorText}>{errors.email.message}</Text>
+            )}
+          </View>
+        </View>
 
-        <Text style={styles.inputLabel}>Confirm password</Text>
-        <Controller
-          name="confirmPassword"
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <CustomInput
-              placeholder="••••••••"
-              inputOnBlur={onBlur}
-              inputSetValue={onChange}
-              censorInput={true}
-              inputValue={value}
-            />
-          )}
-        />
+        <View
+          style={
+            errors.password && {
+              marginBottom: 16,
+            }
+          }
+        >
+          <Text style={styles.inputLabel}>Password</Text>
+          <Controller
+            name="password"
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                placeholder="••••••••"
+                inputOnBlur={onBlur}
+                inputSetValue={onChange}
+                censorInput={true}
+                inputValue={value}
+              />
+            )}
+          />
+          <View style={{ minHeight: 20 }}>
+            {errors.password && (
+              <Text style={styles.errorText}>{errors.password.message}</Text>
+            )}
+          </View>
+        </View>
+
+        <View
+          style={
+            errors.confirmPassword && {
+              marginBottom: 16,
+            }
+          }
+        >
+          <Text style={styles.inputLabel}>Confirm password</Text>
+          <Controller
+            name="confirmPassword"
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                placeholder="••••••••"
+                inputOnBlur={onBlur}
+                inputSetValue={onChange}
+                censorInput={true}
+                inputValue={value}
+              />
+            )}
+          />
+          <View style={{ minHeight: 20 }}>
+            {errors.confirmPassword && (
+              <Text style={styles.errorText}>
+                {errors.confirmPassword.message}
+              </Text>
+            )}
+          </View>
+        </View>
 
         <Button
           DesiredTheme="primary"
@@ -132,34 +189,68 @@ export default function registerForm() {
           onPress={handleSubmit(onRegister)}
         />
       </View>
-
-      <Text style={styles.labelSecondary}>
-        Have an account already?{" "}
+      <View style={[{ paddingTop: 10 }, styles.labelSecondary]}>
         <Text
-          style={{ color: theme.colors.primary, fontWeight: "bold" }}
-          onPress={() => router.push("/login")}
+          style={[styles.labelSecondary, { color: theme.colors.textPrimary }]}
         >
-          Sign in
+          Have an account already?
         </Text>
-      </Text>
+        <Pressable onPress={() => router.push("/login")}>
+          <Text
+            style={[styles.labelSecondary, { color: theme.colors.primary }]}
+          >
+            Sign in{" "}
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  title: {
+    color: theme.colors.textPrimary,
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 4,
+  },
+  subtitle: {
+    color: theme.colors.textSecondary,
+    fontSize: 14,
+    marginBottom: 14,
+  },
+  nameRow: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  halfField: {
+    flex: 1,
+  },
+
   inputLabel: {
     color: theme.colors.textSecondary,
     paddingBottom: 4,
     fontSize: 13,
+
     textTransform: "uppercase",
     marginLeft: 4,
     fontWeight: "700",
     letterSpacing: 1,
   },
+  errorText: {
+    color: theme.colors.danger,
+    fontSize: 13,
+    marginTop: 6,
+    marginLeft: 4,
+  },
   labelSecondary: {
+    flexDirection: "row",
+    justifyContent: "center",
     color: theme.colors.textSecondary,
-    paddingTop: 20,
     textAlign: "center",
+  },
+  errorContainer: {
+    minHeight: 18, // 👈 keeps layout stable
   },
   LoginFormContainer: {
     justifyContent: "center",

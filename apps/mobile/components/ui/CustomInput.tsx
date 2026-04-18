@@ -86,7 +86,6 @@ export default function CustomInput({
 }
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 20,
     borderWidth: 1,
     borderColor: theme.colors.border,
     borderRadius: 12,

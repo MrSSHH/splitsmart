@@ -3,11 +3,30 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import Button from "../ui/Button";
 import CustomInput from "../ui/CustomInput";
 import { useRouter } from "expo-router";
-import { useState } from "react";
+import {} from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { loginSchema } from "@/schemas/authSchemas";
+import { Controller, useForm } from "react-hook-form";
 
 export default function LoginForm() {
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    mode: "onChange",
+    reValidateMode: "onChange",
+  });
+
+  const onSubmit = (data: any) => {
+    console.table(data);
+  };
+
   const router = useRouter();
   return (
     <View>
@@ -31,36 +50,66 @@ export default function LoginForm() {
         >
           Enter your credentials to access your account.
         </Text>
-        <Text style={styles.inputLabel}>Email</Text>
-        <CustomInput
-          inputValue={email}
-          inputSetValue={setEmail}
-          placeholder="you@example.com"
-        />
-        <Text style={styles.inputLabel}>Password</Text>
+        <View style={styles.fieldGroup}>
+          <Text style={styles.inputLabel}>Email</Text>
+          <Controller
+            name="email"
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                placeholder="you@example.com"
+                inputOnBlur={onBlur}
+                inputSetValue={onChange}
+                inputValue={value}
+              />
+            )}
+          />
+          {errors.email && (
+            <Text style={styles.errorText}>{errors.email.message}</Text>
+          )}
+        </View>
 
-        <CustomInput
-          inputSetValue={setPassword}
-          placeholder="••••••••"
-          inputValue={password}
-          censorInput={true}
-        />
+        <View style={styles.fieldGroup}>
+          <Text style={styles.inputLabel}>Password</Text>
+
+          <Controller
+            name="password"
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <CustomInput
+                placeholder="••••••••"
+                inputOnBlur={onBlur}
+                censorInput={true}
+                inputSetValue={onChange}
+                inputValue={value}
+              />
+            )}
+          />
+          {errors.password && (
+            <Text style={styles.errorText}>{errors.password.message}</Text>
+          )}
+        </View>
         <Button
           DesiredTheme="primary"
           label="Login"
-          onPress={() => console.log("Pressed !")}
+          onPress={handleSubmit(onSubmit)}
         />
       </View>
-
-      <Text style={styles.labelSecondary}>
-        Don&apos;t have an account?{" "}
+      <View style={[{ paddingTop: 10 }, styles.labelSecondary]}>
         <Text
-          style={{ color: theme.colors.primary, fontWeight: "bold" }}
-          onPress={() => router.push("/register")}
+          style={[styles.labelSecondary, { color: theme.colors.textPrimary }]}
         >
-          Sign up
+          Don&apos;t have an account?
         </Text>
-      </Text>
+        <Pressable onPress={() => router.push("/register")}>
+          <Text
+            style={[styles.labelSecondary, { color: theme.colors.primary }]}
+          >
+            {" "}
+            Sign up
+          </Text>
+        </Pressable>
+      </View>
     </View>
   );
 }
@@ -76,9 +125,17 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   labelSecondary: {
-    color: theme.colors.textSecondary,
-    paddingTop: 20,
-    textAlign: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignContent: "center",
+  },
+  fieldGroup: {
+    marginBottom: 16,
+  },
+  errorText: {
+    color: theme.colors.danger ?? "red",
+    fontSize: 14,
+    marginLeft: 4,
   },
   LoginFormContainer: {
     justifyContent: "center",

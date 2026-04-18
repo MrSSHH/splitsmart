@@ -1,6 +1,6 @@
 import { theme } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Link, router, Stack, useRouter } from "expo-router";
+import { router, Stack } from "expo-router";
 import { Pressable, View } from "react-native";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -34,14 +34,12 @@ export default function RootLayout() {
                 headerTitleStyle: { color: theme.colors.textPrimary },
                 animation: "slide_from_right",
                 headerLeft: () => {
-                  const router = useRouter();
                   return (
                     <Pressable onPress={() => router.push("/login")}>
                       <Ionicons
                         name={"arrow-back-outline"}
                         color={"white"}
                         size={25}
-                        style={{ marginLeft: 10 }}
                       />
                     </Pressable>
                   );
