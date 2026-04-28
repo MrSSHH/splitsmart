@@ -1,18 +1,18 @@
-version: '3.8'
-
 services:
-  database:
-    image: postgres:15
-    container_name: auth_service_db
+  db:
+    image: postgres:15-alpine
+    container_name: splitsmart_db
     restart: always
+    # This environment section tells Docker which variables to look for
+    # run this container using the following command inside of the apps folder: docker-compose --env-file api/.env up -v
     environment:
-      POSTGRES_USER: auth_admin
-      POSTGRES_PASSWORD: password123 # Note: Use secrets or .env for production
-      POSTGRES_DB: auth_identity_db
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASS}
+      POSTGRES_DB: ${DATABASE_NAME}
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - splitsmart_pg_data:/var/lib/postgresql/data
 
 volumes:
-  postgres_data:
+  splitsmart_pg_data:
