@@ -9,8 +9,21 @@ export class UsersService {
     @InjectRepository(User)
     private usersRepository: Repository<User>,
   ) {}
-  async create(email: string) {
-    const newUser = this.usersRepository.create({ email }); // TODO: fix to fit a DTO
+  async create(
+    firstName: string,
+    lastName: string,
+    username: string,
+    email: string,
+    password: string,
+  ): Promise<User> {
+    const newUser = this.usersRepository.create({
+      firstName,
+      lastName,
+      username,
+
+      email,
+      password,
+    });
     return this.usersRepository.save(newUser);
   }
 

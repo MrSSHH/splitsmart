@@ -1,6 +1,7 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginRequestDto } from './dto/login.dto';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -12,6 +13,21 @@ export class AuthController {
     console.log(
       `Login request detected: ${signInDto.username} ${signInDto.password}`,
     );
-    return this.authService.signIn(signInDto.username, signInDto.password);
+    return this.authService.signIn(signInDto.username!, signInDto.password!);
+  }
+
+  @Post('register')
+  register(@Body() registerDto: RegisterDto) {
+    console.log(
+      `Register request detected: ${registerDto.firstName} ${registerDto.lastName} ${registerDto.email} ${registerDto.password} ${registerDto.confirmPassword}`,
+    );
+    return this.authService.register(
+      registerDto.firstName!,
+      registerDto.lastName!,
+      registerDto.username!,
+      registerDto.email!,
+      registerDto.password!,
+      registerDto.confirmPassword!,
+    );
   }
 }
