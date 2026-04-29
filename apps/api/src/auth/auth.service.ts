@@ -18,7 +18,6 @@ export class AuthService {
   async register(
     firstName: string,
     lastName: string,
-    username: string,
 
     email: string,
     password: string,
@@ -35,7 +34,6 @@ export class AuthService {
     const newUser = await this.usersService.create(
       firstName,
       lastName,
-      username,
       email,
       hashedPassword,
     );
@@ -58,7 +56,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    const payload = { sub: user.id, username: user.username };
+    const payload = { sub: user.id, email: user.email };
 
     return {
       access_token: this.jwtService.sign(payload),

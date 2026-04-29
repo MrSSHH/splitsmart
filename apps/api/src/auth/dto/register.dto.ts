@@ -7,9 +7,6 @@ export class RegisterDto {
   @IsNotEmpty()
   lastName?: string;
 
-  @IsNotEmpty()
-  username?: string;
-
   @IsEmail()
   email?: string;
 
