@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schemas/authSchemas";
 import { Controller, useForm } from "react-hook-form";
 import { loginUser } from "@/src/api/auth";
-import { userLoginRequest, userLoginResponse } from "@/constants/authShapes";
+import { loginRequest, loginResponse } from "@/constants/authShapes";
 export default function LoginForm() {
   const {
     control,
@@ -24,11 +24,11 @@ export default function LoginForm() {
     reValidateMode: "onChange",
   });
   const [hasLoginFailed, setHasLoginFailed] = useState<boolean>(false);
-  const onSubmit = async (data: userLoginRequest) => {
+  const onSubmit = async (data: loginRequest) => {
     console.log(data);
     try {
       setHasLoginFailed(false);
-      const userData: userLoginResponse = await loginUser(
+      const userData: loginResponse = await loginUser(
         data.email,
         data.password
       );

@@ -1,4 +1,4 @@
-import { userLoginResponse } from "@/constants/authShapes";
+import { loginResponse } from "@/constants/authShapes";
 import { API_URL } from "@/constants/config";
 
 export const loginUser = async (email: string, password: string) => {
@@ -12,5 +12,5 @@ export const loginUser = async (email: string, password: string) => {
   if (!response.ok) {
     throw new Error(data.message || "Login failed");
   }
-  return data as userLoginResponse;
+  return data as loginResponse;
 };
