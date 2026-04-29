@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
@@ -24,6 +28,19 @@ export class UsersService {
       email,
       password,
     });
+    try {
+      const savedUser = await this.usersRepository.save(newUser);
+    } catch (error) {
+      if (error.code === '23505') {
+        const detail = error.detail;
+        throw new ConflictException({
+          message: 'User registration failed',
+          detail: detail.replace('Key ', ''), // Makes it cleaner for the frontend
+        });
+      } else {
+        throw new InternalServerErrorException();
+      }
+    }
     return this.usersRepository.save(newUser);
   }
 
