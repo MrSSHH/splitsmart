@@ -30,18 +30,18 @@ export class UsersService {
     });
     try {
       const savedUser = await this.usersRepository.save(newUser);
+      return savedUser;
     } catch (error) {
       if (error.code === '23505') {
         const detail = error.detail;
         throw new ConflictException({
           message: 'User registration failed',
-          detail: detail.replace('Key ', ''), // Makes it cleaner for the frontend
+          detail: detail.replace('Key ', ''),
         });
       } else {
         throw new InternalServerErrorException();
       }
     }
-    return this.usersRepository.save(newUser);
   }
 
   async findOne(email: string) {
