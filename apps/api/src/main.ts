@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors(); // allows Expo app to talk to the API
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // Strips away properties that don't have decorators in the DTO

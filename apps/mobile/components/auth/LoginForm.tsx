@@ -1,13 +1,14 @@
 import { theme } from "@/constants/colors";
-import { View, Text, StyleSheet, Pressable } from "react-native";
+import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
 import Button from "../ui/Button";
 import CustomInput from "../ui/CustomInput";
 import { useRouter } from "expo-router";
-import {} from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schemas/authSchemas";
 import { Controller, useForm } from "react-hook-form";
-
+import { loginUser } from "@/src/api/auth";
+import { userLoginRequest, userLoginResponse } from "@/constants/authShapes";
 export default function LoginForm() {
   const {
     control,
@@ -22,9 +23,23 @@ export default function LoginForm() {
     mode: "onChange",
     reValidateMode: "onChange",
   });
-
-  const onSubmit = (data: any) => {
+  const [hasLoginFailed, setHasLoginFailed] = useState<boolean>(false);
+  const onSubmit = async (data: userLoginRequest) => {
     console.log(data);
+    try {
+      setHasLoginFailed(false);
+      const userData: userLoginResponse = await loginUser(
+        data.email,
+        data.password
+      );
+      console.log(
+        "Success",
+        `Welcome back, accessToken: ${userData.access_token}!`
+      );
+    } catch (error) {
+      setHasLoginFailed(true);
+      console.log("Error", error.message);
+    }
   };
 
   const router = useRouter();
@@ -90,6 +105,11 @@ export default function LoginForm() {
             <Text style={styles.errorText}>{errors.password.message}</Text>
           )}
         </View>
+        {hasLoginFailed && (
+          <Text style={[{ marginBottom: 10 }, styles.errorText]}>
+            Invalid username or password.
+          </Text>
+        )}
         <Button
           DesiredTheme="primary"
           label="Login"
