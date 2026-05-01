@@ -1,30 +1,29 @@
 import { getAccessToken } from "@/src/api/auth";
 import { Redirect } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { View, Text } from "react-native";
 
 export default function Home (){
-    const [token, setToken] = useState<string | null>(null);
 
     useEffect(() => {
-        getAccessToken().then((storedToken) => {
-            setToken(storedToken);
-        });
-    }, []);
+        const fetchToken = async () => {
+            const storedToken = await getAccessToken();
+            if (!storedToken) {
+                console.log("No token found, redirecting to login.");
+                return <Redirect href="/auth/login" />;
+            }
 
-    if (token === undefined) {
-        return null;
-    }
-    if (!token) {
-        return <Redirect href="/auth/login" />;
-    }
+        };
+        fetchToken();
+    }, []);
     return (
-        <div>
-            <h1>Welcome to the Home Screen</h1>
-            {token ? (
-                <p>Logged in with token: {token}</p>
+        <View>
+
+            {typeof getAccessToken() === "string" ? (
+                <Text>Logged in with token: {getAccessToken()}</Text>
             ) : (
-                <p>Not logged in</p>
+                <Text>Not logged in</Text>
             )}
-        </div>
+        </View>           
     );
 }

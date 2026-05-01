@@ -1,6 +1,7 @@
 import { loginResponse } from "@/constants/authShapes";
 import { API_URL } from "@/constants/config";
 import * as SecureStore from 'expo-secure-store';
+import { Platform } from "react-native";
 
 
 const ACCESS_TOKEN_KEY = 'accessToken';
@@ -49,10 +50,22 @@ export const registerUser = async (
 
 
 export async function saveAccessToken(token: string) {
+  console.log('Saving token on:', Platform.OS);
+
+  if (Platform.OS === 'web') {
+    localStorage.setItem(ACCESS_TOKEN_KEY, token);
+    return;
+  }
   await SecureStore.setItemAsync(ACCESS_TOKEN_KEY, token);
 }
 
 export async function getAccessToken() {
+  console.log('Reading token on:', Platform.OS);
+
+  if (Platform.OS === 'web') {
+      return localStorage.getItem(ACCESS_TOKEN_KEY);
+  }
+
   return await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
 }
 

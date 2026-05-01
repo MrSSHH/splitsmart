@@ -50,9 +50,10 @@ export default function RegisterForm() {
           );
           
       // Store the access token securely
-      clearAccessToken();
       saveAccessToken(userData.access_token);
-          
+      console.log("Access token saved, navigating to home...\ntoken:", userData.access_token);
+      router.replace("/tabs/home");
+
         } catch (error: any) {
           setHasRegisterFailed(true);
           console.log("Error", error.message);

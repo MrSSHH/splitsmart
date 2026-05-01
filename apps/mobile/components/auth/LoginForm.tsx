@@ -7,11 +7,9 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schemas/authSchemas";
 import { Controller, useForm } from "react-hook-form";
-import { clearAccessToken, loginUser, saveAccessToken } from "@/src/api/auth";
+import { loginUser, saveAccessToken } from "@/src/api/auth";
 import { loginRequest, loginResponse } from "@/constants/authShapes";
-import * as SecureStore from 'expo-secure-store';
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
-import { set } from "zod";
+
 
 
 
@@ -47,8 +45,10 @@ export default function LoginForm() {
       );
     
     // Store the access token securely
-    clearAccessToken();
     saveAccessToken(userData.access_token);
+    console.log("Access token saved, navigating to home...\ntoken:", userData.access_token);
+
+    router.replace("/tabs/home");
       
     } catch (error: any) {
       setHasLoginFailed(true);
