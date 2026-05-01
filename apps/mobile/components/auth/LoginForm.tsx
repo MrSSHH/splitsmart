@@ -1,5 +1,5 @@
 import { theme } from "@/constants/colors";
-import { View, Text, StyleSheet, Pressable, Alert } from "react-native";
+import { View, Text, StyleSheet, Pressable, Alert, ActivityIndicator } from "react-native";
 import Button from "../ui/Button";
 import CustomInput from "../ui/CustomInput";
 import { useRouter } from "expo-router";
@@ -7,8 +7,14 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "@/schemas/authSchemas";
 import { Controller, useForm } from "react-hook-form";
-import { loginUser } from "@/src/api/auth";
+import { clearAccessToken, loginUser, saveAccessToken } from "@/src/api/auth";
 import { loginRequest, loginResponse } from "@/constants/authShapes";
+import * as SecureStore from 'expo-secure-store';
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { set } from "zod";
+
+
+
 export default function LoginForm() {
   const {
     control,
@@ -24,7 +30,10 @@ export default function LoginForm() {
     reValidateMode: "onChange",
   });
   const [hasLoginFailed, setHasLoginFailed] = useState<boolean>(false);
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
+
   const onSubmit = async (data: loginRequest) => {
+    setIsLoggingIn(true);
     console.log(data);
     try {
       setHasLoginFailed(false);
@@ -36,7 +45,12 @@ export default function LoginForm() {
         "Success",
         `Welcome back, accessToken: ${userData.access_token}!`
       );
-    } catch (error) {
+    
+    // Store the access token securely
+    clearAccessToken();
+    saveAccessToken(userData.access_token);
+      
+    } catch (error: any) {
       setHasLoginFailed(true);
       console.log("Error", error.message);
     }
@@ -110,6 +124,15 @@ export default function LoginForm() {
             Invalid username or password.
           </Text>
         )}
+        { isLoggingIn ? (
+          <View style={{ flexDirection: "row", alignItems: "center",  gap: 8 }}>
+            <ActivityIndicator color="#fff" />
+            <Text style={{ color: theme.colors.textSecondary, marginBottom: 10 }}>
+              Logging in...
+            </Text>
+          </View>
+
+        ) : null }
         <Button
           DesiredTheme="primary"
           label="Login"
@@ -122,7 +145,7 @@ export default function LoginForm() {
         >
           Don&apos;t have an account?
         </Text>
-        <Pressable onPress={() => router.push("/register")}>
+        <Pressable onPress={() => router.push("/auth/register")}>
           <Text
             style={[styles.labelSecondary, { color: theme.colors.primary }]}
           >

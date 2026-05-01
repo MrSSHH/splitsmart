@@ -11,7 +11,7 @@ export default function Index() {
       }}
     >
       <Link
-        href="/login"
+        href="/auth/login"
         dismissTo
         style={{
           marginTop: 15,

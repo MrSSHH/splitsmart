@@ -3,7 +3,6 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import * as bcrypt from 'bcrypt';
-import { userInfo } from 'os';
 @Injectable()
 export class AuthService {
   constructor(
@@ -37,8 +36,8 @@ export class AuthService {
       email,
       hashedPassword,
     );
-
-    return newUser;
+    const accessToken = this.signIn(email, password);
+    return accessToken;
   }
 
   async validateUser(password: string, storedHash: string): Promise<boolean> {

@@ -6,8 +6,14 @@ import { useRouter } from "expo-router";
 import { Controller, useForm } from "react-hook-form";
 import { signUpSchema } from "../../schemas/authSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { clearAccessToken, registerUser, saveAccessToken } from "@/src/api/auth";
+import { loginResponse } from "@/constants/authShapes";
+import * as SecureStore from 'expo-secure-store';
 
 export default function RegisterForm() {
+  const [hasRegisterFailed, setHasRegisterFailed] = useState<boolean>(false);
+  
   const {
     control,
     handleSubmit,
@@ -27,8 +33,32 @@ export default function RegisterForm() {
 
   const router = useRouter();
 
-  const onRegister = (data: any) => {
-    console.log("Success! Sending to server:", data);
+  const onRegister = async (data: any) => {
+    console.log("Registration data:", data);
+        try {
+          setHasRegisterFailed(false);
+          const userData: loginResponse = await registerUser(
+            data.email,
+            data.firstName,
+            data.lastName,
+            data.password,
+            data.confirmPassword
+          );
+          console.log(
+            "Success",
+            `accessToken: ${userData.access_token}!`
+          );
+          
+      // Store the access token securely
+      clearAccessToken();
+      saveAccessToken(userData.access_token);
+          
+        } catch (error: any) {
+          setHasRegisterFailed(true);
+          console.log("Error", error.message);
+        }
+    setHasRegisterFailed(false);
+
   };
 
   return (
@@ -196,7 +226,7 @@ export default function RegisterForm() {
         >
           Have an account already?
         </Text>
-        <Pressable onPress={() => router.push("/login")}>
+        <Pressable onPress={() => router.push("/auth/login")}>
           <Text
             style={[styles.labelSecondary, { color: theme.colors.primary }]}
           >

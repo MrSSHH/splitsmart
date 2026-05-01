@@ -15,7 +15,7 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen
-              name="login"
+              name="auth/login"
               options={{
                 title: "Login",
                 headerShown: false,
@@ -24,7 +24,7 @@ export default function RootLayout() {
             />
             <Stack.Screen name="index" options={{ title: "Home" }} />
             <Stack.Screen
-              name="register"
+              name="auth/register"
               options={{
                 title: "Sign up",
                 headerTitleAlign: "center",
@@ -35,7 +35,7 @@ export default function RootLayout() {
                 animation: "slide_from_right",
                 headerLeft: () => {
                   return (
-                    <Pressable onPress={() => router.push("/login")}>
+                    <Pressable onPress={() => router.push("/auth/login")}>
                       <Ionicons
                         name={"arrow-back-outline"}
                         color={"white"}
