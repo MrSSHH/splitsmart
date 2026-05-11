@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
   bottomRow: {
     flexDirection: "row",
     alignItems: "center",
+    
   },
 
   bottomBlock: {
