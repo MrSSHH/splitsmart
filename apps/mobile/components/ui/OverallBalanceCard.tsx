@@ -1,8 +1,8 @@
 import { theme } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { Ionicons } from "@expo/vector-icons";
-import { View, Text, StyleSheet } from "react-native";
-
+import { View, Text, StyleSheet, Image } from "react-native";
+const WalletImage = require("@/assets/images/ui_icons/darkwallet.png");
 type Props = {
   youOwe: number;
   youAreOwed: number;
@@ -15,7 +15,10 @@ export default function OverallBalanceCard({
   currency,
 }: Props) {
   return (
+    
     <View style={styles.container}>
+        <Image source={WalletImage} style={styles.walletImage} resizeMode="contain" />
+
       <Text style={styles.label}>Overall balance</Text>
 
       <Text style={styles.positiveLabel}>You are owed</Text>
@@ -24,13 +27,13 @@ export default function OverallBalanceCard({
                 {currency}
             </Text>
             <Text style={styles.mainAmount}>
-                {youAreOwed}
+                {youAreOwed.toFixed(2)}
             </Text>
         </View>
 
       <View style={styles.pill}>
         <Text style={styles.pillText}>Net across 3 groups</Text>{" "}
-        <Ionicons name={icons.trends}      color={theme.colors.primary} size={14} style={{ marginLeft: 6 }} />
+        <Ionicons name={icons.trends} color={theme.colors.primary} size={14} style={{ marginLeft: 6 }} />
       </View>
 
       <View style={styles.divider} />
@@ -79,6 +82,16 @@ const styles = StyleSheet.create({
     letterSpacing: -1,
 
   },
+
+    walletImage: {
+        position: "absolute",
+        top: 42,
+        right: -8,
+        width: 175,
+        height: 175,
+        opacity: 0.95,
+    },
+
   label: {
     color: theme.colors.textSecondary,
     fontSize: 16,

@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: theme.colors.background,
+    padding: 10,
   },
 
 });
