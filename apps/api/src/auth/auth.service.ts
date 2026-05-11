@@ -42,15 +42,18 @@ export class AuthService {
 
   async validateUser(password: string, storedHash: string): Promise<boolean> {
     const isMatch = await bcrypt.compare(password, storedHash);
+    console.log(`Password validation result: ${isMatch}`);
     return isMatch;
   }
   async signIn(email: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(email);
+    console.log(`Attempting to sign in user: ${user}`);
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
     const isMatch = await this.validateUser(pass, user?.password!);
-
+    console.log(`User found: ${user.email}, Password match: ${isMatch}`);
+    
     if (!isMatch) {
       throw new UnauthorizedException('Invalid email or password');
     }

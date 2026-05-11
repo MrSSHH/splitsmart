@@ -11,7 +11,8 @@ export default function SignUp() {
         <KeyboardAwareScrollView
           contentContainerStyle={styles.scrollContent}
           keyboardShouldPersistTaps="handled"
-          showsVerticalScrollIndicator={false}
+          bottomOffset={80}
+
         >
           <RegisterForm />
         </KeyboardAwareScrollView>
@@ -26,7 +27,7 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
   },
   scrollContent: {
-    padding: 16,
-    paddingBottom: 32,
+    flexGrow: 1,
+    padding: 10,
   },
 });

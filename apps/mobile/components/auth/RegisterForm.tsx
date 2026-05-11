@@ -7,9 +7,8 @@ import { Controller, useForm } from "react-hook-form";
 import { signUpSchema } from "../../schemas/authSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
-import { clearAccessToken, registerUser, saveAccessToken } from "@/src/api/auth";
+import { registerUser, saveAccessToken } from "@/src/api/auth";
 import { loginResponse } from "@/constants/authShapes";
-import * as SecureStore from 'expo-secure-store';
 
 export default function RegisterForm() {
   const [hasRegisterFailed, setHasRegisterFailed] = useState<boolean>(false);

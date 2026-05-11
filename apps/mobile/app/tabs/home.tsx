@@ -1,7 +1,8 @@
+import { theme } from "@/constants/colors";
 import { getAccessToken } from "@/src/api/auth";
 import { Redirect } from "expo-router";
 import { useEffect } from "react";
-import { View, Text } from "react-native";
+import { View, StyleSheet} from "react-native";
 
 export default function Home (){
 
@@ -17,13 +18,37 @@ export default function Home (){
         fetchToken();
     }, []);
     return (
-        <View>
-
-            {typeof getAccessToken() === "string" ? (
-                <Text>Logged in with token: {getAccessToken()}</Text>
-            ) : (
-                <Text>Not logged in</Text>
-            )}
+        <View style={styles.screen}>
+            
         </View>           
     );
 }
+
+
+const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+    backgroundColor: theme.colors.background,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    justifyContent: "center", // centers everything vertically when keyboard is closed
+    padding: 16,
+  },
+
+  header: {
+    alignItems: "center",
+    marginBottom: 20,
+  },
+
+  title: {
+    color: theme.colors.textPrimary,
+    fontSize: 32,
+    fontWeight: "bold",
+  },
+  subtitle: {
+    color: theme.colors.textSecondary,
+    fontSize: 14,
+    marginTop: 6,
+  },
+});

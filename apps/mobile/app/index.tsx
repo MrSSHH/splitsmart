@@ -1,27 +1,39 @@
-import { Link } from "expo-router";
-import { Text, View } from "react-native";
+import { getAccessToken } from "@/src/api/auth";
+import { Redirect } from "expo-router";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Text, View } from "react-native";
 
 export default function Index() {
-  return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Link
-        href="/auth/login"
-        dismissTo
+
+  // Check if user is authenticated and navigate accordingly
+  const [token, setToken] = useState<string | null | undefined>(undefined);
+  useEffect(() => {
+    const checkAuth = async () => {
+      const retrievedToken = await getAccessToken();
+      console.log("Token on app load:", retrievedToken);
+      setToken(retrievedToken);
+    };
+    checkAuth();
+  }, []);
+
+    // Still checking storage
+  if (token === undefined) {
+    return (
+      <View
         style={{
-          marginTop: 15,
-          paddingVertical: 15,
-          backgroundColor: "red",
-          borderRadius: 12,
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        <Text>Login</Text>
-      </Link>
-    </View>
-  );
+        <ActivityIndicator />
+      </View>
+    );
+  }
+
+  if ( token === null) {
+    console.log("No token found, redirecting to login.");
+    return <Redirect href="/auth/login" />;
+  }
+  return ( <Redirect href="/tabs/home" /> );
 }
