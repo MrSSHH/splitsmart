@@ -1,72 +1,69 @@
 export const theme = {
   colors: {
-    // --- FOUNDATION (The "Canvas") ---
-    /** The deepest layer. Use for the main screen container.
-     * Slightly blue-tinted to reduce OLED "smearing" compared to #000. */
+    // --- FOUNDATION ---
     background: "#0B0F14",
-
-    /** Layer 1 elevation. Use for containers, cards, and list items.
-     * Provides visual separation from the background. */
+    backgroundDeep: "#05080C",
     card: "#121821",
-
-    /** Structural lines. Use for hair-line dividers between list items
-     * or as a 1px stroke around cards to define their shape. */
+    cardElevated: "#151C27",
+    cardDark: "#0E141D",
     border: "#1F2933",
+    borderSoft: "#263241",
+    divider: "#202A36",
 
-    // --- TYPOGRAPHY (The "Content") ---
-    /** Highest emphasis. Use for account balances, headers, and
-     * critical data points that must be readable at a glance. */
+    // --- TYPOGRAPHY ---
     textPrimary: "#E6EDF3",
-
-    /** Medium emphasis. Use for sub-headers, descriptions,
-     * and secondary labels (e.g., "Account Number"). */
     textSecondary: "#9AA4AF",
-
-    /** Low emphasis. Use for metadata, timestamps, or
-     * disclaimer text that shouldn't distract the user. */
     textMuted: "#6B7280",
+    textDisabled: "#4B5563",
+    textInverse: "#FFFFFF",
 
-    // --- INTERACTION (The "Actions") ---
-    /** Brand identity. Use for primary action buttons (e.g., "Transfer"),
-     * active tab icons, and progress bars. */
+    // --- BRAND / ACTIONS ---
     primary: "#3B82F6",
-
-    /** Feedback state. Use for the 'underlayColor' in Touchables
-     * to give users visual confirmation that a press was registered. */
     primaryPressed: "#2563EB",
+    primarySoft: "#1D4ED8",
+    primaryGlow: "rgba(59, 130, 246, 0.35)",
 
-    // --- SEMANTIC STATES (The "Financial Logic") ---
-    /** Growth/Income. Use for positive price movements,
-     * successful transaction badges, and "Receive" buttons. */
+    // --- SEMANTIC MONEY COLORS ---
     success: "#22C55E",
+    successBright: "#4ADE80",
+    successSoft: "rgba(34, 197, 94, 0.14)",
 
-    /** Loss/Danger. Use for negative price movements,
-     * withdrawal actions, or "Delete Account" alerts. */
     danger: "#EF4444",
+    dangerBright: "#F87171",
+    dangerSoft: "rgba(239, 68, 68, 0.14)",
 
-    /** Caution/Pending. Use for "In Review" transactions,
-     * low balance alerts, or unverified account states. */
     warning: "#F59E0B",
+    warningBright: "#FBBF24",
+    warningSoft: "rgba(245, 158, 11, 0.14)",
 
-    // --- UTILITY (Optional but helpful) ---
-    /** Overlay for modals. Apply with 0.5 opacity
-     * to dim the background when a popup is active. */
-    overlay: "rgba(0, 0, 0, 0.7)",
+    // --- ICON TILE COLORS ---
+    blueTile: "#3B82F6",
+    greenTile: "#4ADE80",
+    yellowTile: "#FBBF24",
+    iconDark: "#071018",
 
-    // --- AUTH SPECIFIC ---
-    /** Background for text inputs. Darker than the card to look "hollow." */
+    // --- AUTH / INPUTS ---
     inputBackground: "#090D11",
-
-    /** The border of the input when not selected. */
     inputBorder: "#1F2933",
-
-    /** The border when the user is typing. Use Primary Blue. */
     inputFocus: "#3B82F6",
+    inputPlaceholder: "#6B7280",
 
-    /** For "Forgot Password?" or "Create Account" links. */
     linkText: "#3B82F6",
-
-    /** Validation text color for "Password too short" etc. */
     errorText: "#EF4444",
+
+    // --- TABS ---
+    tabBackground: "#0E141D",
+    tabActive: "#3B82F6",
+    tabInactive: "#8B95A5",
+    tabBorder: "#1F2933",
+
+    // --- BADGES / PILLS ---
+    pillBackground: "#1A2230",
+    pillText: "#B8C0CC",
+
+    // --- UTILITY ---
+    overlay: "rgba(0, 0, 0, 0.7)",
+    shadow: "rgba(0, 0, 0, 0.45)",
+    glass: "rgba(18, 24, 33, 0.78)",
   },
 };

@@ -1,8 +1,11 @@
+import OverallBalanceCard from "@/components/ui/OverallBalanceCard";
 import { theme } from "@/constants/colors";
+import { homeMock } from "@/constants/mocks/home";
 import { getAccessToken } from "@/src/api/auth";
 import { Redirect } from "expo-router";
 import { useEffect } from "react";
-import { View, StyleSheet} from "react-native";
+import { StyleSheet} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Home (){
 
@@ -18,9 +21,9 @@ export default function Home (){
         fetchToken();
     }, []);
     return (
-        <View style={styles.screen}>
-            
-        </View>           
+        <SafeAreaView style={styles.screen} edges={["top","left", "right", "bottom"]}>
+            <OverallBalanceCard youOwe={homeMock.balance.youOwe.amount} youAreOwed={55} currency={homeMock.currency} />
+        </SafeAreaView>           
     );
 }
 
@@ -30,25 +33,5 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colors.background,
   },
-  scrollContent: {
-    flexGrow: 1,
-    justifyContent: "center", // centers everything vertically when keyboard is closed
-    padding: 16,
-  },
 
-  header: {
-    alignItems: "center",
-    marginBottom: 20,
-  },
-
-  title: {
-    color: theme.colors.textPrimary,
-    fontSize: 32,
-    fontWeight: "bold",
-  },
-  subtitle: {
-    color: theme.colors.textSecondary,
-    fontSize: 14,
-    marginTop: 6,
-  },
 });

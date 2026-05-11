@@ -1,7 +1,8 @@
+import { theme } from "@/constants/colors";
 import { getAccessToken } from "@/src/api/auth";
 import { Redirect } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 
 export default function Index() {
 
@@ -24,9 +25,10 @@ export default function Index() {
           flex: 1,
           justifyContent: "center",
           alignItems: "center",
+          backgroundColor: theme.colors.background,
         }}
       >
-        <ActivityIndicator />
+        <ActivityIndicator size="large"/>
       </View>
     );
   }

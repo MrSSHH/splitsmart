@@ -15,7 +15,7 @@ export default function RootLayout() {
             }}
           >
             <Stack.Screen
-              name="(tabs)"
+              name="tabs"
               options={{ headerShown: false, animation: "fade" }}
             />
             
