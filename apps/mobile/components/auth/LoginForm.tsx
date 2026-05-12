@@ -1,5 +1,12 @@
 import { theme } from "@/constants/colors";
-import { View, Text, StyleSheet, Pressable, Alert, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  Alert,
+  ActivityIndicator,
+} from "react-native";
 import Button from "../ui/Button";
 import CustomInput from "../ui/CustomInput";
 import { useRouter } from "expo-router";
@@ -9,9 +16,6 @@ import { loginSchema } from "@/schemas/authSchemas";
 import { Controller, useForm } from "react-hook-form";
 import { loginUser, saveAccessToken } from "@/src/api/auth";
 import { loginRequest, loginResponse } from "@/constants/authShapes";
-
-
-
 
 export default function LoginForm() {
   const {
@@ -43,13 +47,15 @@ export default function LoginForm() {
         "Success",
         `Welcome back, accessToken: ${userData.access_token}!`
       );
-    
-    // Store the access token securely
-    saveAccessToken(userData.access_token);
-    console.log("Access token saved, navigating to home...\ntoken:", userData.access_token);
 
-    router.replace("/tabs/home");
-      
+      // Store the access token securely
+      saveAccessToken(userData.access_token);
+      console.log(
+        "Access token saved, navigating to home...\ntoken:",
+        userData.access_token
+      );
+
+      router.replace("/(tabs)/home");
     } catch (error: any) {
       setHasLoginFailed(true);
       console.log("Error", error.message);
@@ -124,15 +130,16 @@ export default function LoginForm() {
             Invalid username or password.
           </Text>
         )}
-        { isLoggingIn ? (
-          <View style={{ flexDirection: "row", alignItems: "center",  gap: 8 }}>
+        {isLoggingIn ? (
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
             <ActivityIndicator color="#fff" />
-            <Text style={{ color: theme.colors.textSecondary, marginBottom: 10 }}>
+            <Text
+              style={{ color: theme.colors.textSecondary, marginBottom: 10 }}
+            >
               Logging in...
             </Text>
           </View>
-
-        ) : null }
+        ) : null}
         <Button
           DesiredTheme="primary"
           label="Login"

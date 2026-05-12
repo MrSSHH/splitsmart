@@ -15,25 +15,29 @@ export default function OverallBalanceCard({
   currency,
 }: Props) {
   return (
-    
     <View style={styles.container}>
-        <Image source={WalletImage} style={styles.walletImage} resizeMode="contain" />
+      <Image
+        source={WalletImage}
+        style={styles.walletImage}
+        resizeMode="contain"
+      />
 
       <Text style={styles.label}>Overall balance</Text>
 
       <Text style={styles.positiveLabel}>You are owed</Text>
-        <View style={{ flexDirection: "row", alignItems: "baseline"}}  > 
-            <Text style={styles.currency}>
-                {currency}
-            </Text>
-            <Text style={styles.mainAmount}>
-                {youAreOwed.toFixed(2)}
-            </Text>
-        </View>
+      <View style={{ flexDirection: "row", alignItems: "baseline" }}>
+        <Text style={styles.currency}>{currency}</Text>
+        <Text style={styles.mainAmount}>{youAreOwed.toFixed(2)}</Text>
+      </View>
 
       <View style={styles.pill}>
         <Text style={styles.pillText}>Net across 3 groups</Text>{" "}
-        <Ionicons name={icons.trends} color={theme.colors.primary} size={14} style={{ marginLeft: 6 }} />
+        <Ionicons
+          name={icons.trends}
+          color={theme.colors.primary}
+          size={14}
+          style={{ marginLeft: 6 }}
+        />
       </View>
 
       <View style={styles.divider} />
@@ -43,7 +47,7 @@ export default function OverallBalanceCard({
           <Text style={styles.bottomLabel}>People owe you</Text>
           <Text style={styles.greenAmount}>
             {currency}
-            {youAreOwed}
+            {youAreOwed.toFixed(2)}
           </Text>
         </View>
 
@@ -53,7 +57,7 @@ export default function OverallBalanceCard({
           <Text style={styles.bottomLabel}>You owe</Text>
           <Text style={styles.redAmount}>
             {currency}
-            {youOwe}
+            {youOwe.toFixed(2)}
           </Text>
         </View>
       </View>
@@ -80,30 +84,28 @@ const styles = StyleSheet.create({
     fontSize: 36,
     fontWeight: "800",
     letterSpacing: -1,
-
   },
 
-    walletImage: {
-        position: "absolute",
-        top: 42,
-        right: -8,
-        width: 175,
-        height: 175,
-        opacity: 0.95,
-    },
+  walletImage: {
+    position: "absolute",
+    top: 42,
+    right: -8,
+    width: 175,
+    height: 175,
+    opacity: 0.95,
+  },
 
   label: {
     color: theme.colors.textSecondary,
     fontSize: 16,
     fontWeight: "600",
-    marginBottom: 22,
+    marginBottom: 12,
   },
 
   positiveLabel: {
     color: theme.colors.successBright ?? theme.colors.success,
     fontSize: 16,
     fontWeight: "700",
-    marginBottom: 8,
   },
 
   mainAmount: {
@@ -132,13 +134,12 @@ const styles = StyleSheet.create({
   divider: {
     height: 1,
     backgroundColor: theme.colors.divider ?? theme.colors.border,
-    marginVertical: 24,
+    marginVertical: 14,
   },
 
   bottomRow: {
     flexDirection: "row",
     alignItems: "center",
-    
   },
 
   bottomBlock: {
