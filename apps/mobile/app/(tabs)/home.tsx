@@ -4,7 +4,7 @@ import { theme } from "@/constants/colors";
 import { homeMock } from "@/constants/mocks/home";
 import { getAccessToken } from "@/src/api/auth";
 import { getTimeOfDay } from "@/src/api/utils";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { icons } from "@/constants/icons";
@@ -16,11 +16,12 @@ export default function Home() {
       const storedToken = await getAccessToken();
       if (!storedToken) {
         console.log("No token found, redirecting to login.");
-        return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
+        //return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
       }
     };
     fetchToken();
   }, []);
+
   return (
     <ScrollView style={styles.screen}>
       <SafeAreaView edges={["top", "left", "right", "bottom"]}>
@@ -45,6 +46,7 @@ export default function Home() {
             {homeMock.user.firstName} 👋
           </Text>
         </View>
+
         <View style={styles.overAllBalance}>
           <OverallBalanceCard
             youOwe={homeMock.balance.youOwe.amount}
@@ -52,28 +54,27 @@ export default function Home() {
             currency={homeMock.currency}
           />
         </View>
+
         <View style={styles.activityRow}>
-          <View style={styles.activityBtn}>
-            <ActivityCard
-              icon={icons.addExpense}
-              title="Add expense"
-              subtitle="Split with others"
-            />
-          </View>
-          <View style={styles.activityBtn}>
-            <ActivityCard
-              icon={icons.settleUp}
-              title="Settle up"
-              subtitle="Pay or get paid"
-            />{" "}
-          </View>
-          <View style={styles.activityBtn}>
-            <ActivityCard
-              icon={icons.group}
-              title="New group"
-              subtitle="Create a group"
-            />
-          </View>
+          <ActivityCard
+            icon={icons.addExpense}
+            title="Add expense"
+            subtitle="Split with others"
+            onPress={() => console.log("Pressed add expense")}
+          />
+          <ActivityCard
+            icon={icons.settleUp}
+            title="Settle up"
+            subtitle="Pay or get paid"
+            onPress={() => console.log("Pressed settle up ")}
+          />
+
+          <ActivityCard
+            icon={icons.group}
+            title="New group"
+            subtitle="Create a group"
+            onPress={() => console.log("Pressed new group")}
+          />
         </View>
       </SafeAreaView>
     </ScrollView>

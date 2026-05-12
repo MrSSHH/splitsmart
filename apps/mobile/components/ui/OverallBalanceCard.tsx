@@ -31,7 +31,7 @@ export default function OverallBalanceCard({
       </View>
 
       <View style={styles.pill}>
-        <Text style={styles.pillText}>Net across 3 groups</Text>{" "}
+        <Text style={styles.pillText}>Net across 3 groups</Text>
         <Ionicons
           name={icons.trends}
           color={theme.colors.primary}
