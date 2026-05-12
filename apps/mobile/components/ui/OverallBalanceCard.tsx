@@ -88,10 +88,10 @@ const styles = StyleSheet.create({
 
   walletImage: {
     position: "absolute",
-    top: 42,
-    right: -8,
-    width: 175,
-    height: 175,
+    top: 10,
+    right: -20,
+    width: 200,
+    height: 200 ,
     opacity: 0.95,
   },
 
