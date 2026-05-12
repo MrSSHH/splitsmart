@@ -36,20 +36,17 @@ export const homeMock = {
         {
           id: "1",
           name: "Dana",
-          avatar:
-            "https://i.pravatar.cc/150?img=32",
+          avatar: "https://i.pravatar.cc/150?img=32",
         },
         {
           id: "2",
           name: "Eli",
-          avatar:
-            "https://i.pravatar.cc/150?img=12",
+          avatar: "https://i.pravatar.cc/150?img=12",
         },
         {
           id: "3",
           name: "Noam",
-          avatar:
-            "https://i.pravatar.cc/150?img=15",
+          avatar: "https://i.pravatar.cc/150?img=15",
         },
       ],
     },
@@ -60,14 +57,12 @@ export const homeMock = {
         {
           id: "4",
           name: "Maya",
-          avatar:
-            "https://i.pravatar.cc/150?img=47",
+          avatar: "https://i.pravatar.cc/150?img=47",
         },
         {
           id: "5",
           name: "David",
-          avatar:
-            "https://i.pravatar.cc/150?img=13",
+          avatar: "https://i.pravatar.cc/150?img=13",
         },
       ],
     },
@@ -138,8 +133,7 @@ export const homeMock = {
       description: "You added ₪120 for dinner",
       amount: -120,
       timeAgo: "2h ago",
-      avatar:
-        "https://i.pravatar.cc/150?img=12",
+      avatar: "https://i.pravatar.cc/150?img=12",
     },
 
     {
@@ -150,8 +144,7 @@ export const homeMock = {
       description: "Dana paid you",
       amount: 40,
       timeAgo: "5h ago",
-      avatar:
-        "https://i.pravatar.cc/150?img=32",
+      avatar: "https://i.pravatar.cc/150?img=32",
     },
 
     {

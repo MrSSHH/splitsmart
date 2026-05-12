@@ -9,6 +9,7 @@ import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { icons } from "@/constants/icons";
 import { useRouter } from "expo-router";
+import GroupsOverviewCard from "@/components/ui/GroupsOverviewCard";
 export default function Home() {
   const router = useRouter();
   useEffect(() => {
@@ -16,7 +17,7 @@ export default function Home() {
       const storedToken = await getAccessToken();
       if (!storedToken) {
         console.log("No token found, redirecting to login.");
-        return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
+        // return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
       }
     };
     fetchToken();
@@ -76,6 +77,11 @@ export default function Home() {
               onPress={() => console.log("Pressed new group")}
             />
           </View>
+
+          <View style={styles.groupOverview}>
+            <Text style={styles.groupsTitle}>Your groups</Text>
+            <GroupsOverviewCard />
+          </View>
         </View>
       </SafeAreaView>
     </ScrollView>
@@ -97,5 +103,13 @@ const styles = StyleSheet.create({
   },
   activityBtn: {
     flex: 1,
+  },
+  groupOverview: {
+    marginTop: 10,
+  },
+  groupsTitle: {
+    color: theme.colors.textPrimary,
+    fontSize: 14,
+    fontWeight: "700",
   },
 });
