@@ -16,7 +16,7 @@ export default function Home() {
       const storedToken = await getAccessToken();
       if (!storedToken) {
         console.log("No token found, redirecting to login.");
-        //return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
+        return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
       }
     };
     fetchToken();
@@ -25,7 +25,7 @@ export default function Home() {
   return (
     <ScrollView style={styles.screen}>
       <SafeAreaView edges={["top", "left", "right", "bottom"]}>
-        <View style={{ paddingLeft: 10, paddingBottom: 5 }}>
+        <View style={{ paddingLeft: 5 }}>
           <Text
             style={{
               fontWeight: "bold",
@@ -46,35 +46,36 @@ export default function Home() {
             {homeMock.user.firstName} 👋
           </Text>
         </View>
+        <View style={{ padding: 10 }}>
+          <View style={styles.overAllBalance}>
+            <OverallBalanceCard
+              youOwe={homeMock.balance.youOwe.amount}
+              youAreOwed={55}
+              currency={homeMock.currency}
+            />
+          </View>
 
-        <View style={styles.overAllBalance}>
-          <OverallBalanceCard
-            youOwe={homeMock.balance.youOwe.amount}
-            youAreOwed={55}
-            currency={homeMock.currency}
-          />
-        </View>
+          <View style={styles.activityRow}>
+            <ActivityCard
+              icon={icons.addExpense}
+              title="Add expense"
+              subtitle="Split with others"
+              onPress={() => console.log("Pressed add expense")}
+            />
+            <ActivityCard
+              icon={icons.settleUp}
+              title="Settle up"
+              subtitle="Pay or get paid"
+              onPress={() => console.log("Pressed settle up ")}
+            />
 
-        <View style={styles.activityRow}>
-          <ActivityCard
-            icon={icons.addExpense}
-            title="Add expense"
-            subtitle="Split with others"
-            onPress={() => console.log("Pressed add expense")}
-          />
-          <ActivityCard
-            icon={icons.settleUp}
-            title="Settle up"
-            subtitle="Pay or get paid"
-            onPress={() => console.log("Pressed settle up ")}
-          />
-
-          <ActivityCard
-            icon={icons.group}
-            title="New group"
-            subtitle="Create a group"
-            onPress={() => console.log("Pressed new group")}
-          />
+            <ActivityCard
+              icon={icons.group}
+              title="New group"
+              subtitle="Create a group"
+              onPress={() => console.log("Pressed new group")}
+            />
+          </View>
         </View>
       </SafeAreaView>
     </ScrollView>
