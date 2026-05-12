@@ -30,7 +30,7 @@ export default function Home() {
           <Text
             style={{
               fontWeight: "bold",
-              color: theme.colors.textMuted,
+              color: theme.colors.textSecondary,
               fontSize: 19,
             }}
           >
