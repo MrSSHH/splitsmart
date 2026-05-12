@@ -80,7 +80,7 @@ export default function Home() {
 
           <View style={styles.groupOverview}>
             <Text style={styles.groupsTitle}>Your groups</Text>
-            {/* <GroupsOverviewCard /> */}
+            <GroupsOverviewCard groups={homeMock.groups} />
           </View>
         </View>
       </SafeAreaView>

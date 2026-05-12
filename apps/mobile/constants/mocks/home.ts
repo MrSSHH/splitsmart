@@ -89,41 +89,31 @@ export const homeMock = {
     },
   ],
 
-  groups: [
-    {
-      id: "1",
-      name: "Apartment",
-      memberCount: 4,
-      icon: "home-outline",
-      iconBackground: "#3B82F6",
+groups: [
+  {
+    id: 1,
+    groupIcon: "home-outline",
+    groupName: "Apartment",
+    groupMembersAmt: 4,
+    debtStatus: DebtStatus.YOU_OWE,
+  },
 
-      status: DebtStatus.YOU_OWE,
-      amount: 42,
-    },
+  {
+    id: 2,
+    groupIcon: "restaurant-outline",
+    groupName: "Lunch Crew",
+    groupMembersAmt: 5,
+    debtStatus: DebtStatus.OWED_TO_YOU,
+  },
 
-    {
-      id: "2",
-      name: "Lunch Crew",
-      memberCount: 5,
-      icon: "restaurant-outline",
-      iconBackground: "#4ADE80",
-
-      status: DebtStatus.OWED_TO_YOU,
-      amount: 85,
-    },
-
-    {
-      id: "3",
-      name: "Trip to Eilat",
-      memberCount: 6,
-      icon: "airplane-outline",
-      iconBackground: "#FBBF24",
-
-      status: DebtStatus.SETTLED,
-      amount: 0,
-    },
-  ],
-
+  {
+    id: 3,
+    groupIcon: "airplane-outline",
+    groupName: "Trip to Eilat",
+    groupMembersAmt: 6,
+    debtStatus: DebtStatus.SETTLED,
+  },
+],
   recentActivity: [
     {
       id: "1",
