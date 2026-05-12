@@ -1,7 +1,18 @@
 import { theme } from "@/constants/colors";
 import { View, Text, StyleSheet } from "react-native";
+import GroupRow from "./GroupRow";
+import { Group } from "@/constants/dataShapes";
 
-export default function GroupsOverviewCard() {
+type Props = Group & {
+  getGroups: () => Group[];
+};
+
+export default function GroupsOverviewCard({
+  groupIcon,
+  groupName,
+  groupMembersAmt,
+  debtStatus,
+}: Props) {
   return <View style={styles.container}></View>;
 }
 
