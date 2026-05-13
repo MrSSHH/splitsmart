@@ -86,24 +86,19 @@ export default function GroupRow({ group }: Props) {
             {group.groupMembersAmt} members
           </Text>
         </View>
-        <Pressable
-      onPress={() => console.log(`Group row ${group.groupName}`)}
-      onPressIn={animateIn}
-      onPressOut={animateOut}
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
-    >
-
         <View style={styles.oweContainer}>
           <View style={styles.debtTextContainer}>{renderDebtStatus()}</View>
+      <Pressable onPressIn={animateIn} onPressOut={animateOut} style={({ pressed }) => [pressed && styles.pressed]}>
 
           <Ionicons
             name={icons.enterChevron}
             size={20}
             color={theme.colors.textSecondary}
           />
+            </Pressable>
+
         </View>
       </View>
-    </Pressable>
   );
 }
 

@@ -2,6 +2,7 @@ import { theme } from "@/constants/colors";
 import { View, StyleSheet } from "react-native";
 import GroupRow from "./GroupRow";
 import { Group } from "@/constants/dataShapes";
+import { Fragment } from "react";
 
 type Props = {
   groups: Group[];
@@ -11,10 +12,10 @@ export default function GroupsOverviewCard({ groups }: Props) {
   return (
   <View style={styles.container}>
     {groups.map((group, idx) => (
-      <>
-        <GroupRow key={group.id ?? idx} group={group} />
+      <Fragment key={group.id ?? idx}>
+        <GroupRow  group={group} />
         {idx < groups.length - 1 && <View style={styles.divider} />}
-      </>
+      </Fragment>
 
     ))}
   </View>

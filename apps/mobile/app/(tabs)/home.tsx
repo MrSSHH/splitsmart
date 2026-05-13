@@ -4,7 +4,7 @@ import { theme } from "@/constants/colors";
 import { homeMock } from "@/constants/mocks/home";
 import { getAccessToken } from "@/src/api/auth";
 import { getTimeOfDay } from "@/src/api/utils";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { icons } from "@/constants/icons";
@@ -17,7 +17,7 @@ export default function Home() {
       const storedToken = await getAccessToken();
       if (!storedToken) {
         console.log("No token found, redirecting to login.");
-        // return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
+        return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
       }
     };
     fetchToken();
