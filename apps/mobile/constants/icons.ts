@@ -51,6 +51,7 @@ export const icons = {
   search: "search-outline",
   filter: "filter-outline",
   back: "arrow-back-outline",
+  enterChevron: "chevron-forward-outline",
 
   // --- ANALYTICS ---
   chart: "stats-chart-outline",

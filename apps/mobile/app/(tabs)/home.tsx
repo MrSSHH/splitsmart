@@ -17,7 +17,7 @@ export default function Home() {
       const storedToken = await getAccessToken();
       if (!storedToken) {
         console.log("No token found, redirecting to login.");
-        return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
+        // return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
       }
     };
     fetchToken();

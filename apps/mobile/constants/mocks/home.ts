@@ -89,31 +89,38 @@ export const homeMock = {
     },
   ],
 
-groups: [
-  {
-    id: 1,
-    groupIcon: "home-outline",
-    groupName: "Apartment",
-    groupMembersAmt: 4,
-    debtStatus: DebtStatus.YOU_OWE,
-  },
+  groups: [
+    {
+      id: 1,
+      groupIcon: "home-outline",
+      groupName: "Apartment",
+      groupMembersAmt: 4,
+      groupDebt: 45,
+      currency: Currency.ILS,
+      debtStatus: DebtStatus.YOU_OWE,
+    },
 
-  {
-    id: 2,
-    groupIcon: "restaurant-outline",
-    groupName: "Lunch Crew",
-    groupMembersAmt: 5,
-    debtStatus: DebtStatus.OWED_TO_YOU,
-  },
+    {
+      id: 2,
+      groupIcon: "restaurant-outline",
+      groupName: "Lunch Crew",
+      groupMembersAmt: 5,
+      groupDebt: 25,
+      currency: Currency.ILS,
 
-  {
-    id: 3,
-    groupIcon: "airplane-outline",
-    groupName: "Trip to Eilat",
-    groupMembersAmt: 6,
-    debtStatus: DebtStatus.SETTLED,
-  },
-],
+      debtStatus: DebtStatus.OWED_TO_YOU,
+    },
+
+    {
+      id: 3,
+      groupIcon: "airplane-outline",
+      groupName: "Trip to Eilat",
+      groupMembersAmt: 6,
+      groupDebt: 0,
+      currency: Currency.ILS,
+      debtStatus: DebtStatus.SETTLED,
+    },
+  ],
   recentActivity: [
     {
       id: "1",
