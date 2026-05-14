@@ -73,32 +73,34 @@ export default function GroupRow({ group }: Props) {
   const animateOut = () =>
     Animated.spring(scale, { toValue: 1, useNativeDriver: true });
   const animateIn = () =>
-    Animated.spring(scale, { toValue: 0.96, useNativeDriver: true });
+    Animated.spring(scale, { toValue: 0.9, useNativeDriver: true });
 
   return (
-      <View style={styles.container}>
-        <View style={styles.iconContainer}>
-          <Ionicons size={25} name={iconName} color={"#000"} />
-        </View>
-        <View style={styles.groupInfoContainer}>
-          <Text style={styles.groupName}>{group.groupName}</Text>
-          <Text style={styles.groupMembers}>
-            {group.groupMembersAmt} members
-          </Text>
-        </View>
-        <View style={styles.oweContainer}>
-          <View style={styles.debtTextContainer}>{renderDebtStatus()}</View>
-      <Pressable onPressIn={animateIn} onPressOut={animateOut} style={({ pressed }) => [pressed && styles.pressed]}>
+    <View style={styles.container}>
+      <View style={styles.iconContainer}>
+        <Ionicons size={25} name={iconName} color={"#000"} />
+      </View>
+      <View style={styles.groupInfoContainer}>
+        <Text style={styles.groupName}>{group.groupName}</Text>
+        <Text style={styles.groupMembers}>{group.groupMembersAmt} members</Text>
+      </View>
 
+      <View style={styles.oweContainer}>
+        <View style={styles.debtTextContainer}>{renderDebtStatus()}</View>
+        <Pressable
+          onPress={() => console.log(`Group row ${group.groupName}`)}
+          onPressIn={animateIn}
+          onPressOut={animateOut}
+          style={({ pressed }) => [styles.container, pressed && styles.pressed]}
+        >
           <Ionicons
             name={icons.enterChevron}
             size={20}
             color={theme.colors.textSecondary}
           />
-            </Pressable>
-
-        </View>
+        </Pressable>
       </View>
+    </View>
   );
 }
 
@@ -159,6 +161,6 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.75,
-    transform: [{ scale: 0.97 }],
+    transform: [{ scale: 0.9 }],
   },
 });

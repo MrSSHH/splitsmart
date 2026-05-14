@@ -10,6 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { icons } from "@/constants/icons";
 import { useRouter } from "expo-router";
 import GroupsOverviewCard from "@/components/ui/GroupsOverviewCard";
+import ViewAllButton from "@/components/ui/ViewAllButton";
 export default function Home() {
   const router = useRouter();
   useEffect(() => {
@@ -80,8 +81,9 @@ export default function Home() {
 
           <View style={styles.groupOverview}>
             <Text style={styles.groupsTitle}>Your groups</Text>
-            <GroupsOverviewCard groups={homeMock.groups} />
+            <ViewAllButton eventFunc={() => console.log("View all groups")} />
           </View>
+          <GroupsOverviewCard groups={homeMock.groups} />
         </View>
       </SafeAreaView>
     </ScrollView>
@@ -105,6 +107,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   groupOverview: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 10,
   },
   groupsTitle: {
