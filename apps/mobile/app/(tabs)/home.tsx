@@ -25,7 +25,7 @@ export default function Home() {
   }, []);
 
   return (
-    <ScrollView style={styles.screen}>
+    <ScrollView contentContainerStyle={styles.content} style={styles.screen}>
       <SafeAreaView edges={["top", "left", "right", "bottom"]}>
         <View style={{ paddingLeft: 5 }}>
           <Text
@@ -83,7 +83,7 @@ export default function Home() {
             <Text style={styles.groupsTitle}>Your groups</Text>
             <ViewAllButton eventFunc={() => console.log("View all groups")} />
           </View>
-          <GroupsOverviewCard groups={homeMock.groups} />
+          <GroupsOverviewCard groups={[]} />
         </View>
       </SafeAreaView>
     </ScrollView>
@@ -96,6 +96,10 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.background,
     padding: 10,
   },
+  content: {
+    paddingBottom: 110,
+  },
+
   overAllBalance: {
     marginBottom: 10,
   },
