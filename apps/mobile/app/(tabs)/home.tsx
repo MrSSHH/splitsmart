@@ -4,13 +4,14 @@ import { theme } from "@/constants/colors";
 import { homeMock } from "@/constants/mocks/home";
 import { getAccessToken } from "@/src/api/auth";
 import { getTimeOfDay } from "@/src/api/utils";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { icons } from "@/constants/icons";
 import { useRouter } from "expo-router";
 import GroupsOverviewCard from "@/components/ui/GroupsOverviewCard";
 import ViewAllButton from "@/components/ui/ViewAllButton";
+import CreateGroupModal from "@/components/ui/ActivityScreens/CreateGroupModal";
 export default function Home() {
   const router = useRouter();
   useEffect(() => {
@@ -23,98 +24,114 @@ export default function Home() {
     };
     fetchToken();
   }, []);
+  const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
+return (
+  <SafeAreaView edges={["top", "left", "right"]} style={styles.screen}>
+    <ScrollView
+      showsVerticalScrollIndicator={false}
+      contentContainerStyle={styles.content}
+    >
+      <View style={{ paddingLeft: 5 }}>
+        <Text
+          style={{
+            fontWeight: "bold",
+            color: theme.colors.textSecondary,
+            fontSize: 19,
+          }}
+        >
+          Good {getTimeOfDay()},
+        </Text>
 
-  return (
-    <ScrollView contentContainerStyle={styles.content} style={styles.screen}>
-      <SafeAreaView edges={["top", "left", "right", "bottom"]}>
-        <View style={{ paddingLeft: 5 }}>
-          <Text
-            style={{
-              fontWeight: "bold",
-              color: theme.colors.textSecondary,
-              fontSize: 19,
-            }}
-          >
-            Good {getTimeOfDay()},
-          </Text>
-          <Text
-            style={{
-              color: theme.colors.textPrimary,
-              fontSize: 29,
-              fontWeight: "bold",
-              marginBottom: 8,
-            }}
-          >
-            {homeMock.user.firstName} 👋
-          </Text>
+        <Text
+          style={{
+            color: theme.colors.textPrimary,
+            fontSize: 29,
+            fontWeight: "bold",
+            marginBottom: 8,
+          }}
+        >
+          {homeMock.user.firstName} 👋
+        </Text>
+      </View>
+
+      <View style={{ padding: 10 }}>
+        <View style={styles.overAllBalance}>
+          <OverallBalanceCard
+            youOwe={homeMock.balance.youOwe.amount}
+            youAreOwed={55}
+            currency={homeMock.currency}
+          />
         </View>
-        <View style={{ padding: 10 }}>
-          <View style={styles.overAllBalance}>
-            <OverallBalanceCard
-              youOwe={homeMock.balance.youOwe.amount}
-              youAreOwed={55}
-              currency={homeMock.currency}
-            />
-          </View>
 
-          <View style={styles.activityRow}>
-            <ActivityCard
-              icon={icons.addExpense}
-              title="Add expense"
-              subtitle="Split with others"
-              onPress={() => console.log("Pressed add expense")}
-            />
-            <ActivityCard
-              icon={icons.settleUp}
-              title="Settle up"
-              subtitle="Pay or get paid"
-              onPress={() => console.log("Pressed settle up ")}
-            />
+        <View style={styles.activityRow}>
+          <ActivityCard
+            icon={icons.addExpense}
+            title="Add expense"
+            subtitle="Split with others"
+            onPress={() => console.log("Pressed add expense")}
+          />
 
-            <ActivityCard
-              icon={icons.group}
-              title="New group"
-              subtitle="Create a group"
-              onPress={() => console.log("Pressed new group")}
-            />
-          </View>
+          <ActivityCard
+            icon={icons.settleUp}
+            title="Settle up"
+            subtitle="Pay or get paid"
+            onPress={() => console.log("Pressed settle up")}
+          />
 
-          <View style={styles.groupOverview}>
-            <Text style={styles.groupsTitle}>Your groups</Text>
-            <ViewAllButton eventFunc={() => console.log("View all groups")} />
-          </View>
-          <GroupsOverviewCard groups={[]} />
+          <ActivityCard
+            icon={icons.group}
+            title="New group"
+            subtitle="Create a group"
+            onPress={() => setIsCreateGroupOpen(true)}
+          />
         </View>
-      </SafeAreaView>
+
+        <View style={styles.groupOverview}>
+          <Text style={styles.groupsTitle}>Your groups</Text>
+          <ViewAllButton eventFunc={() => console.log("View all groups")} />
+        </View>
+
+        <GroupsOverviewCard groups={[]} />
+        <CreateGroupModal
+          visible={isCreateGroupOpen}
+          onClose={() => setIsCreateGroupOpen(false)}
+        />
+      </View>
     </ScrollView>
-  );
-}
+  </SafeAreaView>
+);}
+
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    padding: 10,
+    paddingHorizontal: 10,
   },
+
   content: {
-    paddingBottom: 110,
+    paddingBottom: 40,
   },
 
   overAllBalance: {
     marginBottom: 10,
   },
+
   activityRow: {
     flexDirection: "row",
     gap: 10,
   },
+
   activityBtn: {
     flex: 1,
   },
+
   groupOverview: {
     flexDirection: "row",
     justifyContent: "space-between",
     marginTop: 10,
   },
+
   groupsTitle: {
     color: theme.colors.textPrimary,
     fontSize: 14,

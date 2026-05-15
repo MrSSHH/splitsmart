@@ -2,6 +2,8 @@ import { theme } from "@/constants/colors";
 import { icons } from "@/constants/icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
+import { StyleSheet } from "react-native";
+
 
 export default function RootLayout() {
   return (
@@ -13,22 +15,23 @@ export default function RootLayout() {
 
         tabBarInactiveTintColor: theme.colors.tabInactive,
 
-        tabBarStyle: {
-          position: "absolute",
-          overflow: "hidden",
+tabBarStyle: {
+  backgroundColor: theme.colors.tabBackground,
 
-          backgroundColor: theme.colors.tabBackground,
+  // don't use 0
+  borderTopWidth: StyleSheet.hairlineWidth,
+  borderTopColor: theme.colors.tabBackground,
 
-          borderTopWidth: 0,
+  height: 88,
+  paddingTop: 10,
+  paddingBottom: 12,
 
-          height: 88,
-          paddingTop: 10,
-          paddingBottom: 12,
+  borderTopLeftRadius: 28,
+  borderTopRightRadius: 28,
 
-          borderTopLeftRadius: 28,
-          borderTopRightRadius: 28,
-        },
-        tabBarLabelStyle: {
+  // don't use this
+  // overflow: "hidden",
+},        tabBarLabelStyle: {
             fontSize: 12,
             fontWeight: "600",
         }

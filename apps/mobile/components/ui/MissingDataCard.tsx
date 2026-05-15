@@ -27,13 +27,12 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 14,
     paddingHorizontal: 20,
   },
 
   animation: {
-    width: 180,
-    height: 180,
+    width: 120,
+    height: 120,
     marginBottom: 8,
   },
 
