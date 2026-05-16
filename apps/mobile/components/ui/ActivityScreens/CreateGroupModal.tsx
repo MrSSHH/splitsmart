@@ -92,15 +92,17 @@ export default function CreateGroupModal({ visible, onClose }: Props) {
               onChangeText={setGroupDescription}
             />
 
-            <Pressable           
-              onPressIn={animateIn}
-              onPressOut={animateOut}
-              style={({ pressed }) => [styles.createButton, pressed && styles.pressed]}
-              onPress={onClose}>
-
-                <Text style={styles.createButtonText}>Create group</Text>
-            </Pressable>
-          </View>
+        <Animated.View style={{ transform: [{ scale }] }}>
+          <Pressable
+            onPressIn={animateIn}
+            onPressOut={animateOut}
+            style={styles.createButton}
+            onPress={onClose}
+          >
+            <Text style={styles.createButtonText}>Create group</Text>
+          </Pressable>
+        </Animated.View>       
+        </View>
         </KeyboardAwareScrollView>
       </View>
     </Modal>

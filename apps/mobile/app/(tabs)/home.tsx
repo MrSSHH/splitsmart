@@ -4,14 +4,15 @@ import { theme } from "@/constants/colors";
 import { homeMock } from "@/constants/mocks/home";
 import { getAccessToken } from "@/src/api/auth";
 import { getTimeOfDay } from "@/src/api/utils";
-import { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { icons } from "@/constants/icons";
 import { useRouter } from "expo-router";
 import GroupsOverviewCard from "@/components/ui/GroupsOverviewCard";
 import ViewAllButton from "@/components/ui/ViewAllButton";
 import CreateGroupModal from "@/components/ui/ActivityScreens/CreateGroupModal";
+import { Ionicons } from "@expo/vector-icons";
 export default function Home() {
   const router = useRouter();
   useEffect(() => {
@@ -41,7 +42,24 @@ return (
         >
           Good {getTimeOfDay()},
         </Text>
-
+      <Pressable
+        onPress={() => console.log("Notifications")}
+        style={{
+          position: "absolute",
+          right: 10,
+          top: 0,
+          width: 44,
+          height: 44,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Ionicons
+          name={icons.notifications}
+          size={24}
+          color={theme.colors.textPrimary}
+        />
+      </Pressable>
         <Text
           style={{
             color: theme.colors.textPrimary,
