@@ -1,7 +1,8 @@
 import { theme } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
+    Animated,
   Modal,
   Pressable,
   StyleSheet,
@@ -19,6 +20,11 @@ type Props = {
 export default function CreateGroupModal({ visible, onClose }: Props) {
   const [groupName, setGroupName] = useState("");
   const [groupDescription, setGroupDescription] = useState("");
+  const scale = useRef(new Animated.Value(1)).current;
+  const animateOut = () =>
+    Animated.spring(scale, { toValue: 1, useNativeDriver: true }).start();
+  const animateIn = () =>
+    Animated.spring(scale, { toValue: 0.97, useNativeDriver: true }).start();
 
   return (
     <Modal
@@ -56,6 +62,7 @@ export default function CreateGroupModal({ visible, onClose }: Props) {
               <Text style={styles.label}>Group name</Text>
               <Text style={{ justifyContent: "flex-end", color: theme.colors.textSecondary, fontSize: 12 }}>{groupName.length}/30</Text>
             </View>
+
             <TextInput
               placeholder="e.g. Trip to Eilat"
               placeholderTextColor={theme.colors.textSecondary}
@@ -85,8 +92,13 @@ export default function CreateGroupModal({ visible, onClose }: Props) {
               onChangeText={setGroupDescription}
             />
 
-            <Pressable style={styles.createButton} onPress={onClose}>
-              <Text style={styles.createButtonText}>Create group</Text>
+            <Pressable           
+              onPressIn={animateIn}
+              onPressOut={animateOut}
+              style={({ pressed }) => [styles.createButton, pressed && styles.pressed]}
+              onPress={onClose}>
+
+                <Text style={styles.createButtonText}>Create group</Text>
             </Pressable>
           </View>
         </KeyboardAwareScrollView>
@@ -120,7 +132,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 8,
   },
-
+  pressed: {
+    opacity: 0.75,
+    transform: [{ scale: 0.97 }],
+  },
   leftLabelGroup: {
     flexDirection: "row",
     alignItems: "center",

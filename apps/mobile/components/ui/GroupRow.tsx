@@ -71,9 +71,9 @@ export default function GroupRow({ group }: Props) {
   >["name"];
   const scale = useRef(new Animated.Value(1)).current;
   const animateOut = () =>
-    Animated.spring(scale, { toValue: 1, useNativeDriver: true });
+    Animated.spring(scale, { toValue: 1, useNativeDriver: true }).start();
   const animateIn = () =>
-    Animated.spring(scale, { toValue: 0.9, useNativeDriver: true });
+    Animated.spring(scale, { toValue: 0.97, useNativeDriver: true }).start();
 
   return (
     <View style={styles.container}>
@@ -161,6 +161,6 @@ const styles = StyleSheet.create({
   },
   pressed: {
     opacity: 0.75,
-    transform: [{ scale: 0.9 }],
+    transform: [{ scale: 0.97 }],
   },
 });
