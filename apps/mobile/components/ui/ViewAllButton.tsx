@@ -9,12 +9,13 @@ type Props = {
 export default function ViewAllButton({ eventFunc }: Props) {
   const scale = useRef(new Animated.Value(1)).current;
   const animateOut = () =>
-    Animated.spring(scale, { toValue: 1, useNativeDriver: true });
+    Animated.spring(scale, { toValue: 1, useNativeDriver: true }).start();
   const animateIn = () =>
-    Animated.spring(scale, { toValue: 0.97, useNativeDriver: true });
+    Animated.spring(scale, { toValue: 0.97, useNativeDriver: true }).start();
 
   return (
-    <Pressable
+    <Animated.View style={{ transform: [{ scale }] }}> 
+        <Pressable
       onPress={eventFunc}
       onPressIn={animateIn}
       onPressOut={animateOut}
@@ -30,6 +31,9 @@ export default function ViewAllButton({ eventFunc }: Props) {
         View all
       </Text>
     </Pressable>
+
+    
+    </Animated.View>
   );
 }
 const styles = StyleSheet.create({
