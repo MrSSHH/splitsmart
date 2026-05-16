@@ -28,30 +28,33 @@ export default function ActivityCard({
     }).start();
   };
   return (
-    <Pressable
-      onPress={onPress}
-      onPressIn={animateIn}
-      onPressOut={animateOut}
-      style={({ pressed }) => [styles.container, pressed && styles.pressed]}
-    >
-      <Animated.View
+    <Animated.View
         style={[
           {
             transform: [{ scale }],
           },
+          styles.container,
         ]}
       >
-        <Ionicons
-          name={icon}
-          size={30}
-          color={theme.colors.primary}
-          style={styles.icon}
-        />
-        <Text style={styles.title}>{title}</Text>
 
-        <Text style={styles.subtitle}>{subtitle}</Text>
-      </Animated.View>
-    </Pressable>
+      <Pressable
+        onPress={onPress}
+        onPressIn={animateIn}
+        onPressOut={animateOut}
+        style={({ pressed }) => [ pressed && styles.pressed, { alignItems: "center", justifyContent: "center" }]}
+      >
+          <Ionicons
+            name={icon}
+            size={30}
+            color={theme.colors.primary}
+            style={styles.icon}
+          />
+          <Text style={styles.title}>{title}</Text>
+
+          <Text style={styles.subtitle}>{subtitle}</Text>
+      </Pressable>
+    </Animated.View>
+
   );
 }
 
@@ -90,6 +93,7 @@ const styles = StyleSheet.create({
 
   icon: {
     fontSize: 30,
+    marginBottom: 8,
   },
   pressed: {
     opacity: 0.75,
