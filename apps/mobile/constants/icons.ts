@@ -60,4 +60,8 @@ export const icons = {
   // --- SOCIAL / PEOPLE ---
   friend: "person-add-outline",
   avatar: "person-circle-outline",
+
+  //
 } as const;
+
+export const groupIcons = ["people", "flight", "home", "restaurant", "cash"];

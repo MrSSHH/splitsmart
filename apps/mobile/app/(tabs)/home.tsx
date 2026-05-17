@@ -26,99 +26,99 @@ export default function Home() {
     fetchToken();
   }, []);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
-return (
-  <SafeAreaView edges={["top", "left", "right"]} style={styles.screen}>
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      contentContainerStyle={styles.content}
-    >
-      <View style={{ paddingLeft: 5 }}>
-        <Text
-          style={{
-            fontWeight: "bold",
-            color: theme.colors.textSecondary,
-            fontSize: 19,
-          }}
-        >
-          Good {getTimeOfDay()},
-        </Text>
-      <Pressable
-        onPress={() => console.log("Notifications")}
-        style={{
-          position: "absolute",
-          right: 10,
-          top: 0,
-          width: 44,
-          height: 44,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+  return (
+    <SafeAreaView edges={["top", "left", "right"]} style={styles.screen}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.content}
       >
-        <Ionicons
-          name={icons.notifications}
-          size={24}
-          color={theme.colors.textPrimary}
-        />
-      </Pressable>
-        <Text
-          style={{
-            color: theme.colors.textPrimary,
-            fontSize: 29,
-            fontWeight: "bold",
-            marginBottom: 8,
-          }}
-        >
-          {homeMock.user.firstName} 👋
-        </Text>
-      </View>
-
-      <View style={{ padding: 10 }}>
-        <View style={styles.overAllBalance}>
-          <OverallBalanceCard
-            youOwe={homeMock.balance.youOwe.amount}
-            youAreOwed={55}
-            currency={homeMock.currency}
-          />
+        <View style={{ paddingLeft: 5 }}>
+          <Text
+            style={{
+              fontWeight: "bold",
+              color: theme.colors.textSecondary,
+              fontSize: 19,
+            }}
+          >
+            Good {getTimeOfDay()},
+          </Text>
+          <Pressable
+            onPress={() => console.log("Notifications")}
+            style={{
+              position: "absolute",
+              right: 10,
+              top: 0,
+              width: 44,
+              height: 44,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Ionicons
+              name={icons.notifications}
+              size={24}
+              color={theme.colors.textPrimary}
+            />
+          </Pressable>
+          <Text
+            style={{
+              color: theme.colors.textPrimary,
+              fontSize: 29,
+              fontWeight: "bold",
+              marginBottom: 8,
+            }}
+          >
+            {homeMock.user.firstName} 👋
+          </Text>
         </View>
 
-        <View style={styles.activityRow}>
-          <ActivityCard
-            icon={icons.addExpense}
-            title="Add expense"
-            subtitle="Split with others"
-            onPress={() => console.log("Pressed add expense")}
-          />
+        <View style={{ padding: 10 }}>
+          <View style={styles.overAllBalance}>
+            <OverallBalanceCard
+              youOwe={homeMock.balance.youOwe.amount}
+              youAreOwed={55}
+              currency={homeMock.currency}
+            />
+          </View>
 
-          <ActivityCard
-            icon={icons.settleUp}
-            title="Settle up"
-            subtitle="Pay or get paid"
-            onPress={() => console.log("Pressed settle up")}
-          />
+          <View style={styles.activityRow}>
+            <ActivityCard
+              icon={icons.addExpense}
+              title="Add expense"
+              subtitle="Split with others"
+              onPress={() => console.log("Pressed add expense")}
+            />
 
-          <ActivityCard
-            icon={icons.group}
-            title="New group"
-            subtitle="Create a group"
-            onPress={() => setIsCreateGroupOpen(true)}
+            <ActivityCard
+              icon={icons.settleUp}
+              title="Settle up"
+              subtitle="Pay or get paid"
+              onPress={() => console.log("Pressed settle up")}
+            />
+
+            <ActivityCard
+              icon={icons.group}
+              title="New group"
+              subtitle="Create a group"
+              onPress={() => setIsCreateGroupOpen(true)}
+            />
+          </View>
+
+          <View style={styles.groupOverview}>
+            <Text style={styles.groupsTitle}>Your groups</Text>
+            <ViewAllButton eventFunc={() => console.log("View all groups")} />
+          </View>
+
+          <GroupsOverviewCard groups={[]} />
+          <CreateGroupModal
+            visible={isCreateGroupOpen}
+            onClose={() => setIsCreateGroupOpen(false)}
           />
         </View>
-
-        <View style={styles.groupOverview}>
-          <Text style={styles.groupsTitle}>Your groups</Text>
-          <ViewAllButton eventFunc={() => console.log("View all groups")} />
-        </View>
-
-        <GroupsOverviewCard groups={[]} />
-        <CreateGroupModal
-          visible={isCreateGroupOpen}
-          onClose={() => setIsCreateGroupOpen(false)}
-        />
-      </View>
-    </ScrollView>
-  </SafeAreaView>
-);}
-
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
 
 const styles = StyleSheet.create({
   screen: {
