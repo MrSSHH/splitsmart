@@ -13,6 +13,7 @@ import GroupsOverviewCard from "@/components/ui/GroupsOverviewCard";
 import ViewAllButton from "@/components/ui/ViewAllButton";
 import CreateGroupModal from "@/components/ui/ActivityScreens/CreateGroupModal";
 import { Ionicons } from "@expo/vector-icons";
+import CreateGroupModalRevised from "@/components/ui/ActivityScreens/CreateGroupModalRevised";
 export default function Home() {
   const router = useRouter();
   useEffect(() => {
@@ -110,12 +111,12 @@ export default function Home() {
           </View>
 
           <GroupsOverviewCard groups={[]} />
-          <CreateGroupModal
-            visible={isCreateGroupOpen}
-            onClose={() => setIsCreateGroupOpen(false)}
-          />
         </View>
       </ScrollView>
+      <CreateGroupModalRevised
+        visible={isCreateGroupOpen}
+        onClose={() => setIsCreateGroupOpen(false)}
+      />
     </SafeAreaView>
   );
 }

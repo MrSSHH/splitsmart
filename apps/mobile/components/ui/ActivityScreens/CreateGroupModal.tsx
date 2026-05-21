@@ -6,7 +6,6 @@ import {
   Modal,
   Platform,
   Pressable,
-  ScrollView,
   StyleSheet,
   Text,
   TextInput,
@@ -17,7 +16,6 @@ import {
   KeyboardAwareScrollView,
 } from "react-native-keyboard-controller";
 import { groupIcons } from "@/constants/icons";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 type Props = {
   visible: boolean;
