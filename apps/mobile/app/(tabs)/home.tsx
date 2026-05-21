@@ -11,9 +11,9 @@ import { icons } from "@/constants/icons";
 import { useRouter } from "expo-router";
 import GroupsOverviewCard from "@/components/ui/GroupsOverviewCard";
 import ViewAllButton from "@/components/ui/ViewAllButton";
-import CreateGroupModal from "@/components/ui/ActivityScreens/CreateGroupModal";
 import { Ionicons } from "@expo/vector-icons";
 import CreateGroupModalRevised from "@/components/ui/ActivityScreens/CreateGroupModalRevised";
+import AddExpenseModal from "@/components/ui/ActivityScreens/AddExpenseModal";
 export default function Home() {
   const router = useRouter();
   useEffect(() => {
@@ -21,12 +21,13 @@ export default function Home() {
       const storedToken = await getAccessToken();
       if (!storedToken) {
         console.log("No token found, redirecting to login.");
-        return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
+        //return router.replace("/auth/login"); // TODO: UNCOMMENT THIS
       }
     };
     fetchToken();
   }, []);
   const [isCreateGroupOpen, setIsCreateGroupOpen] = useState(false);
+  const [isExpenseModalOpen, setIsExpenseModalOpen] = useState(false);
   return (
     <SafeAreaView edges={["top", "left", "right"]} style={styles.screen}>
       <ScrollView
@@ -87,7 +88,7 @@ export default function Home() {
               icon={icons.addExpense}
               title="Add expense"
               subtitle="Split with others"
-              onPress={() => console.log("Pressed add expense")}
+              onPress={() => setIsExpenseModalOpen(true)}
             />
 
             <ActivityCard
@@ -116,6 +117,10 @@ export default function Home() {
       <CreateGroupModalRevised
         visible={isCreateGroupOpen}
         onClose={() => setIsCreateGroupOpen(false)}
+      />
+      <AddExpenseModal
+        visible={isExpenseModalOpen}
+        onClose={() => setIsExpenseModalOpen(false)}
       />
     </SafeAreaView>
   );

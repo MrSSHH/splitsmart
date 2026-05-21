@@ -52,7 +52,7 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
         appearsOnIndex={0}
         disappearsOnIndex={-1}
         opacity={0.55}
-        pressBehavior="collapse" // Tapping the backdrop will close the sheet
+        pressBehavior="close" // Tapping the backdrop will close the sheet
       />
     ),
     [],
@@ -71,11 +71,12 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
   return (
     <BottomSheet
       ref={bottomSheetRef}
-      index={-1} // Keeps it underground safely by default
+      index={visible ? 0 : -1} // Open directly to the only 90% snap point
       snapPoints={snapPoints}
       onChange={onChange}
       backdropComponent={renderBackdrop}
       enablePanDownToClose={true}
+      enableDynamicSizing={false}
       backgroundStyle={styles.sheetBackground}
       handleIndicatorStyle={styles.handleIndicator}
       keyboardBehavior="extend"
@@ -186,7 +187,6 @@ const styles = StyleSheet.create({
   handleIndicator: {
     width: 52,
     height: 5,
-    borderRadius: 999,
     backgroundColor: theme.colors.textSecondary,
     opacity: 0.4,
   },
