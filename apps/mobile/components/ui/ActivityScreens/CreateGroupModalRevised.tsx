@@ -32,7 +32,6 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
   // Index 0 represents 90% view height
   const snapPoints = useMemo(() => ["90%"], []);
 
-  // Use the ref to trigger movement smoothly based on parent state changes
   useEffect(() => {
     if (visible) {
       bottomSheetRef.current?.snapToIndex(0); // Safely slides up to the 90% parking spot
@@ -53,7 +52,7 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
         appearsOnIndex={0}
         disappearsOnIndex={-1}
         opacity={0.55}
-        pressBehavior="close"
+        pressBehavior="collapse" // Tapping the backdrop will close the sheet
       />
     ),
     [],
@@ -61,6 +60,7 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
 
   const onChange = useCallback(
     (index: number) => {
+      console.log("Sheet index changed to", index);
       if (index === -1) {
         onClose();
       }
@@ -76,12 +76,10 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
       onChange={onChange}
       backdropComponent={renderBackdrop}
       enablePanDownToClose={true}
-      // Moves card styles onto Gorhom's native view handler
       backgroundStyle={styles.sheetBackground}
       handleIndicatorStyle={styles.handleIndicator}
       keyboardBehavior="extend"
     >
-      {/* Scroll container that coordinates layout with keyboard movements */}
       <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
@@ -199,7 +197,6 @@ const styles = StyleSheet.create({
   header: {
     alignItems: "center",
     marginBottom: 24,
-    marginTop: 10,
   },
   closeButton: {
     position: "absolute",
