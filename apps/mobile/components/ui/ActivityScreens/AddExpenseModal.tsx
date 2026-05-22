@@ -21,6 +21,7 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
         snapPoints={snapPoints}
         style={styles.sheetBackground}
         handleIndicatorStyle={styles.handleIndicator}
+        backgroundStyle={styles.sheetBackground}
         enableDynamicSizing={false}
         enablePanDownToClose={true}
         onChange={(index) => index === -1 && onClose()} // Close callback when sheet is closed
