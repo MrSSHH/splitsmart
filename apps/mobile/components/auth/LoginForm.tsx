@@ -156,7 +156,6 @@ export default function LoginForm() {
           <Text
             style={[styles.labelSecondary, { color: theme.colors.primary }]}
           >
-            {" "}
             Sign up
           </Text>
         </Pressable>
