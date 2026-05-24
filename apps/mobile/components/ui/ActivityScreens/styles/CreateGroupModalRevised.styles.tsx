@@ -164,7 +164,7 @@ export const styles = StyleSheet.create({
     borderRadius: 22,
   },
   friendAvatarSelected: {
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: theme.colors.tabActive,
     backgroundColor: `${theme.colors.tabActive}20`,
   },
