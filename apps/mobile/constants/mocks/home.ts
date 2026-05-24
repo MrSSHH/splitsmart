@@ -155,4 +155,55 @@ export const homeMock = {
       avatar: null,
     },
   ],
+  friendsList: [
+    {
+      id: "usr_9j2k8a1b",
+      name: "Sarah Jenkins",
+      phone: "+1 (555) 234-5678",
+      image:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=150&h=150&q=80",
+    },
+    {
+      id: "usr_3m7x9p4e",
+      name: "David Chen",
+      phone: "+1 (555) 876-5432",
+      image:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&h=150&q=80",
+    },
+    {
+      id: "usr_5v2l6t8w",
+      name: "Amara Diallo",
+      phone: "+1 (555) 432-1098",
+      image:
+        "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&h=150&q=80",
+    },
+    {
+      id: "usr_8b4q1z7r",
+      name: "Marcus Thompson",
+      phone: "+1 (555) 345-6789",
+      image:
+        "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&h=150&q=80",
+    },
+    {
+      id: "usr_1w9v3n6c",
+      name: "Elena Rostova",
+      phone: "+1 (555) 765-4321",
+      image:
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&h=150&q=80",
+    },
+    {
+      id: "usr_6f8g2y4m",
+      name: "Liam Gallagher",
+      phone: "+1 (555) 987-6543",
+      image:
+        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&w=150&h=150&q=80",
+    },
+    {
+      id: "usr_2t5k7w9x",
+      name: "Sofia Rodriguez",
+      phone: "+1 (555) 543-2109",
+      image:
+        "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=150&h=150&q=80",
+    },
+  ],
 };

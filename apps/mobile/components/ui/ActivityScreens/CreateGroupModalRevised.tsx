@@ -1,5 +1,6 @@
 import { theme } from "@/constants/colors";
 import { groupIcons } from "@/constants/icons";
+import { homeMock } from "@/constants/mocks/home";
 import { Ionicons } from "@expo/vector-icons";
 import BottomSheet, {
   BottomSheetBackdrop,
@@ -14,8 +15,11 @@ import {
   useRef,
   useState,
   useEffect,
+  Fragment,
 } from "react";
-import { Animated, Pressable, StyleSheet, Text, View } from "react-native";
+import { Animated, Pressable, Text, View, Image } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
+import { styles } from "./styles/CreateGroupModalRevised.styles";
 
 type Props = {
   visible: boolean;
@@ -30,8 +34,12 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
   const [addingMembers, setAddingMembers] = useState(false);
   const scale = useRef(new Animated.Value(1)).current;
-
+  const [friendsInGroup, setFriendsInGroup] = useState<string[]>([]);
   const snapPoints = useMemo(() => ["90%"], []);
+
+  // Animation layout hooks for opening the members segment
+  const memberAnimation = useRef(new Animated.Value(0)).current;
+  const [showSelectorRender, setShowSelectorRender] = useState(false);
 
   useEffect(() => {
     if (visible) {
@@ -40,6 +48,27 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
       bottomSheetRef.current?.close();
     }
   }, [visible]);
+
+  // Handle member section open/close transitions
+  useEffect(() => {
+    if (addingMembers) {
+      setShowSelectorRender(true);
+      Animated.spring(memberAnimation, {
+        toValue: 1,
+        tension: 50,
+        friction: 8,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      Animated.timing(memberAnimation, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(() => {
+        setShowSelectorRender(false);
+      });
+    }
+  }, [addingMembers]);
 
   const animateOut = () =>
     Animated.spring(scale, { toValue: 1, useNativeDriver: true }).start();
@@ -56,7 +85,7 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
         pressBehavior="close"
       />
     ),
-    [],
+    []
   );
 
   const onChange = useCallback(
@@ -65,8 +94,21 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
         onClose();
       }
     },
-    [onClose],
+    [onClose]
   );
+
+  // Layout Interpolations for disclosure mechanics
+  const animatedListStyles = {
+    opacity: memberAnimation,
+    transform: [
+      {
+        translateY: memberAnimation.interpolate({
+          inputRange: [0, 1],
+          outputRange: [-10, 0],
+        }),
+      },
+    ],
+  };
 
   return (
     <BottomSheet
@@ -80,6 +122,7 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
       backgroundStyle={styles.sheetBackground}
       handleIndicatorStyle={styles.handleIndicator}
       keyboardBehavior="extend"
+      keyboardBlurBehavior="restore"
     >
       <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
@@ -108,10 +151,7 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
               <Pressable
                 style={[
                   styles.groupIcon,
-                  isSelected && {
-                    borderColor: theme.colors.tabActive,
-                    backgroundColor: `${theme.colors.tabActive}20`,
-                  },
+                  isSelected && styles.groupIconSelected,
                 ]}
                 key={icon}
                 onPress={() => setSelectedIcon(icon)}
@@ -164,33 +204,80 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
           onChangeText={setGroupDescription}
         />
 
-        {/* Add Members Segment */}
+        {/* Members Management System */}
         <View style={styles.memberSectionContainer}>
           <Text style={styles.label}>Add members</Text>
-          <Pressable
-            style={[
-              styles.memberAddButton,
-              addingMembers && {
-                borderColor: theme.colors.tabActive,
-                backgroundColor: `${theme.colors.tabActive}20`,
-              },
-            ]}
-            onPress={() => setAddingMembers(!addingMembers)}
-          >
-            <Ionicons
-              name={addingMembers ? "close" : "person-add"}
-              size={20}
-              color={
-                addingMembers
-                  ? theme.colors.tabActive
-                  : theme.colors.textSecondary
-              }
-            />
-          </Pressable>
 
-          {/* High-Fidelity Custom Search Bar Overlay */}
-          {addingMembers && (
-            <View style={styles.searchBarContainer}>
+          {/* Member Selection Row */}
+          <View style={styles.memberRowLayout}>
+            <Pressable
+              style={[
+                styles.memberAddButton,
+                addingMembers && styles.memberAddButtonActive,
+              ]}
+              onPress={() => setAddingMembers(!addingMembers)}
+            >
+              <Ionicons
+                name={addingMembers ? "close" : "person-add"}
+                size={20}
+                color={
+                  addingMembers
+                    ? theme.colors.tabActive
+                    : theme.colors.textSecondary
+                }
+              />
+            </Pressable>
+
+            {showSelectorRender && (
+              <Animated.View
+                style={[styles.animatedListContainer, animatedListStyles]}
+              >
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.friendsListWrapper}
+                >
+                  {homeMock.friendsList.map((friend) => {
+                    const isFriendSelected = friendsInGroup.includes(friend.id);
+                    return (
+                      <Fragment key={friend.id}>
+                        <Pressable
+                          style={styles.friendItemContainer}
+                          onPress={() => {
+                            console.log(friendsInGroup);
+                            const user = friendsInGroup.indexOf(friend.id);
+                            if (user === -1) {
+                              setFriendsInGroup([...friendsInGroup, friend.id]);
+                            } else {
+                              setFriendsInGroup(
+                                friendsInGroup.toSpliced(user, 1)
+                              );
+                            }
+                          }}
+                        >
+                          <Image
+                            style={[
+                              styles.friendListButton,
+                              styles.friendAvatarSize,
+                              isFriendSelected && styles.friendAvatarSelected,
+                            ]}
+                            source={{ uri: friend.image }}
+                          />
+                          <Text style={styles.friendName}>{friend.name}</Text>
+                        </Pressable>
+                      </Fragment>
+                    );
+                  })}
+                </ScrollView>
+              </Animated.View>
+            )}
+          </View>
+
+          {/* Search Bar rendered with layout configurations matching the spring transition */}
+          {showSelectorRender && (
+            <Animated.View
+              style={[styles.searchBarContainer, animatedListStyles]}
+            >
               <Ionicons
                 name="search-outline"
                 size={18}
@@ -203,7 +290,6 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
                 style={styles.searchInput}
                 value={query}
                 onChangeText={setQuery}
-                autoFocus={true}
               />
               {query.length > 0 && (
                 <Pressable
@@ -217,7 +303,7 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
                   />
                 </Pressable>
               )}
-            </View>
+            </Animated.View>
           )}
         </View>
 
@@ -236,166 +322,3 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
     </BottomSheet>
   );
 }
-
-const styles = StyleSheet.create({
-  sheetBackground: {
-    backgroundColor: theme.colors.card,
-    borderTopLeftRadius: 28,
-    borderTopRightRadius: 28,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  handleIndicator: {
-    width: 48,
-    height: 5,
-    backgroundColor: theme.colors.textSecondary,
-    opacity: 0.3,
-  },
-  scrollContent: {
-    paddingHorizontal: 24,
-    paddingTop: 16,
-    paddingBottom: 40,
-  },
-  header: {
-    alignItems: "center",
-    marginBottom: 32,
-    position: "relative",
-    width: "100%",
-  },
-  closeButton: {
-    position: "absolute",
-    left: 0,
-    top: -4,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: theme.colors.background,
-    alignItems: "center",
-    justifyContent: "center",
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-  },
-  title: {
-    color: theme.colors.textPrimary,
-    fontSize: 22,
-    fontWeight: "800",
-  },
-  subtitle: {
-    color: theme.colors.textSecondary,
-    fontSize: 13,
-    marginTop: 6,
-  },
-  labelRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  label: {
-    color: theme.colors.textPrimary,
-    fontSize: 13,
-    fontWeight: "700",
-  },
-  optionText: {
-    color: theme.colors.textSecondary,
-    fontSize: 13,
-    marginLeft: 4,
-  },
-  characterCount: {
-    color: theme.colors.textSecondary,
-    fontSize: 12,
-    fontWeight: "500",
-  },
-  leftLabelGroup: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  iconSelectionRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 24,
-  },
-  groupIcon: {
-    borderRadius: 16,
-    width: 52,
-    height: 52,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.background,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  input: {
-    height: 56,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.background,
-    color: theme.colors.textPrimary,
-    paddingHorizontal: 16,
-    fontSize: 16,
-    marginBottom: 24,
-  },
-  textArea: {
-    height: 100,
-    paddingTop: 14,
-    textAlignVertical: "top",
-  },
-  memberSectionContainer: {
-    marginTop: 8,
-    marginBottom: 32,
-    gap: 12,
-  },
-  memberAddButton: {
-    borderRadius: 30,
-    width: 56,
-    height: 56,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.background,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  // Custom High-End Search Bar Styling
-  searchBarContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    height: 52,
-    borderRadius: 14,
-    borderWidth: 1,
-    borderColor: theme.colors.border,
-    backgroundColor: theme.colors.background,
-    paddingHorizontal: 14,
-    marginTop: 4,
-    width: "100%",
-  },
-  searchIcon: {
-    marginRight: 10,
-  },
-  searchInput: {
-    flex: 1,
-    height: "100%",
-    color: theme.colors.textPrimary,
-    fontSize: 15,
-  },
-  clearButton: {
-    padding: 4,
-  },
-
-  ctaWrapper: {
-    marginTop: 8,
-  },
-  createButton: {
-    height: 56,
-    borderRadius: 16,
-    backgroundColor: theme.colors.tabActive,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  createButtonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "700",
-  },
-});
