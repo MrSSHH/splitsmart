@@ -32,7 +32,7 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
   const [groupDescription, setGroupDescription] = useState("");
   const [query, setQuery] = useState("");
   const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
-  const [addingMembers, setAddingMembers] = useState(false);
+  const [addingMembers, setAddingMembers] = useState(true); // Default to true since trigger button is removed
   const scale = useRef(new Animated.Value(1)).current;
   const [friendsInGroup, setFriendsInGroup] = useState<string[]>([]);
   const snapPoints = useMemo(() => ["90%"], []);
@@ -121,8 +121,8 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
       enableDynamicSizing={false}
       backgroundStyle={styles.sheetBackground}
       handleIndicatorStyle={styles.handleIndicator}
-      keyboardBehavior="extend"
-      keyboardBlurBehavior="restore"
+      keyboardBehavior="interactive"
+      keyboardBlurBehavior="none"
     >
       <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
@@ -208,72 +208,6 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
         <View style={styles.memberSectionContainer}>
           <Text style={styles.label}>Add members</Text>
 
-          {/* Member Selection Row */}
-          <View style={styles.memberRowLayout}>
-            <Pressable
-              style={[
-                styles.memberAddButton,
-                addingMembers && styles.memberAddButtonActive,
-              ]}
-              onPress={() => setAddingMembers(!addingMembers)}
-            >
-              <Ionicons
-                name={addingMembers ? "close" : "person-add"}
-                size={20}
-                color={
-                  addingMembers
-                    ? theme.colors.tabActive
-                    : theme.colors.textSecondary
-                }
-              />
-            </Pressable>
-
-            {showSelectorRender && (
-              <Animated.View
-                style={[styles.animatedListContainer, animatedListStyles]}
-              >
-                <ScrollView
-                  horizontal
-                  showsHorizontalScrollIndicator={false}
-                  contentContainerStyle={styles.friendsListWrapper}
-                >
-                  {homeMock.friendsList.map((friend) => {
-                    const isFriendSelected = friendsInGroup.includes(friend.id);
-                    return (
-                      <Fragment key={friend.id}>
-                        <Pressable
-                          style={styles.friendItemContainer}
-                          onPress={() => {
-                            console.log(friendsInGroup);
-                            const user = friendsInGroup.indexOf(friend.id);
-                            if (user === -1) {
-                              setFriendsInGroup([...friendsInGroup, friend.id]);
-                            } else {
-                              setFriendsInGroup(
-                                friendsInGroup.toSpliced(user, 1)
-                              );
-                            }
-                          }}
-                        >
-                          <Image
-                            style={[
-                              styles.friendListButton,
-                              styles.friendAvatarSize,
-                              isFriendSelected && styles.friendAvatarSelected,
-                            ]}
-                            source={{ uri: friend.image }}
-                          />
-                          <Text style={styles.friendName}>{friend.name}</Text>
-                        </Pressable>
-                      </Fragment>
-                    );
-                  })}
-                </ScrollView>
-              </Animated.View>
-            )}
-          </View>
-
-          {/* Search Bar rendered with layout configurations matching the spring transition */}
           {showSelectorRender && (
             <Animated.View
               style={[styles.searchBarContainer, animatedListStyles]}
@@ -303,6 +237,51 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
                   />
                 </Pressable>
               )}
+            </Animated.View>
+          )}
+
+          {/* Member Selection Interface - Stretches full-width natively */}
+          {showSelectorRender && (
+            <Animated.View
+              style={[styles.animatedListContainer, animatedListStyles]}
+            >
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                contentContainerStyle={styles.friendsListWrapper}
+              >
+                {homeMock.friendsList.map((friend) => {
+                  const isFriendSelected = friendsInGroup.includes(friend.id);
+                  return (
+                    <Fragment key={friend.id}>
+                      <Pressable
+                        style={styles.friendItemContainer}
+                        onPress={() => {
+                          console.log(friendsInGroup);
+                          const user = friendsInGroup.indexOf(friend.id);
+                          if (user === -1) {
+                            setFriendsInGroup([...friendsInGroup, friend.id]);
+                          } else {
+                            setFriendsInGroup(
+                              friendsInGroup.toSpliced(user, 1)
+                            );
+                          }
+                        }}
+                      >
+                        <Image
+                          style={[
+                            styles.friendListButton,
+                            styles.friendAvatarSize,
+                            isFriendSelected && styles.friendAvatarSelected,
+                          ]}
+                          source={{ uri: friend.image }}
+                        />
+                        <Text style={styles.friendName}>{friend.name}</Text>
+                      </Pressable>
+                    </Fragment>
+                  );
+                })}
+              </ScrollView>
             </Animated.View>
           )}
         </View>

@@ -134,6 +134,9 @@ export const styles = StyleSheet.create({
     backgroundColor: `${theme.colors.tabActive}20`,
   },
   animatedListContainer: {
+    backgroundColor: theme.colors.background,
+    borderRadius: 20,
+
     flex: 1,
   },
   friendsListWrapper: {
@@ -141,8 +144,6 @@ export const styles = StyleSheet.create({
     alignItems: "center",
     gap: 12,
     padding: 12,
-    borderRadius: 20,
-    backgroundColor: theme.colors.background,
   },
   friendItemContainer: {
     alignItems: "center",
