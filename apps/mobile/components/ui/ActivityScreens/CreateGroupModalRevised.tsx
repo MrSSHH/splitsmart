@@ -8,6 +8,7 @@ import BottomSheet, {
   BottomSheetScrollView,
   BottomSheetTextInput,
 } from "@gorhom/bottom-sheet";
+import { zodResolver } from "@hookform/resolvers/zod";
 import {
   ComponentProps,
   useCallback,
@@ -17,8 +18,13 @@ import {
   useEffect,
   Fragment,
 } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { Animated, Pressable, Text, View, Image } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import {
+  createGroupSchema,
+  CreateGroupFormData,
+} from "./../../../schemas/authSchemas"; // Import schema path
 import { styles } from "./styles/CreateGroupModalRevised.styles";
 
 type Props = {
@@ -28,14 +34,26 @@ type Props = {
 
 export default function CreateGroupModalRevised({ visible, onClose }: Props) {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const [groupName, setGroupName] = useState("");
-  const [groupDescription, setGroupDescription] = useState("");
   const [query, setQuery] = useState("");
-  const [selectedIcon, setSelectedIcon] = useState<string | null>(null);
-  const [addingMembers, setAddingMembers] = useState(true); // Default to true since trigger button is removed
+  const [addingMembers] = useState(true);
   const scale = useRef(new Animated.Value(1)).current;
-  const [friendsInGroup, setFriendsInGroup] = useState<string[]>([]);
   const snapPoints = useMemo(() => ["90%"], []);
+
+  // Initialize React Hook Form using the Zod validation configuration
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<CreateGroupFormData>({
+    resolver: zodResolver(createGroupSchema),
+    defaultValues: {
+      groupName: "",
+      groupDescription: "",
+      selectedIcon: "",
+      friendsInGroup: [],
+    },
+  });
 
   // Animation layout hooks for opening the members segment
   const memberAnimation = useRef(new Animated.Value(0)).current;
@@ -46,10 +64,10 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
       bottomSheetRef.current?.snapToIndex(0);
     } else {
       bottomSheetRef.current?.close();
+      reset(); // Resets form values cleanly when closing modal layouts
     }
-  }, [visible]);
+  }, [visible, reset]);
 
-  // Handle member section open/close transitions
   useEffect(() => {
     if (addingMembers) {
       setShowSelectorRender(true);
@@ -97,7 +115,12 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
     [onClose]
   );
 
-  // Layout Interpolations for disclosure mechanics
+  // Submit Handler triggered only if validation passes successfully
+  const onFormSubmit = (data: CreateGroupFormData) => {
+    console.log("Validation Successful! Data Package payload:", data);
+    onClose();
+  };
+
   const animatedListStyles = {
     opacity: memberAnimation,
     transform: [
@@ -143,71 +166,125 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
         {/* Group Image Section */}
         <View style={styles.labelRow}>
           <Text style={styles.label}>Group image</Text>
-        </View>
-        <View style={styles.iconSelectionRow}>
-          {groupIcons.map((icon) => {
-            const isSelected = selectedIcon === icon;
-            return (
-              <Pressable
-                style={[
-                  styles.groupIcon,
-                  isSelected && styles.groupIconSelected,
-                ]}
-                key={icon}
-                onPress={() => setSelectedIcon(icon)}
-              >
-                <Ionicons
-                  name={icon as ComponentProps<typeof Ionicons>["name"]}
-                  size={20}
-                  color={
-                    isSelected
-                      ? theme.colors.tabActive
-                      : theme.colors.textSecondary
-                  }
-                />
-              </Pressable>
-            );
-          })}
+          {errors.selectedIcon && (
+            <Text style={{ color: "red", fontSize: 11 }}>
+              {errors.selectedIcon.message}
+            </Text>
+          )}
         </View>
 
+        <Controller
+          control={control}
+          name="selectedIcon"
+          render={({ field: { onChange: setIcon, value: activeIcon } }) => (
+            <View style={styles.iconSelectionRow}>
+              {groupIcons.map((icon) => {
+                const isSelected = activeIcon === icon;
+                return (
+                  <Pressable
+                    style={[
+                      styles.groupIcon,
+                      isSelected && styles.groupIconSelected,
+                    ]}
+                    key={icon}
+                    onPress={() => setIcon(icon)}
+                  >
+                    <Ionicons
+                      name={icon as ComponentProps<typeof Ionicons>["name"]}
+                      size={20}
+                      color={
+                        isSelected
+                          ? theme.colors.tabActive
+                          : theme.colors.textSecondary
+                      }
+                    />
+                  </Pressable>
+                );
+              })}
+            </View>
+          )}
+        />
+
         {/* Group Name Input */}
-        <View style={styles.labelRow}>
-          <Text style={styles.label}>Group name</Text>
-          <Text style={styles.characterCount}>{groupName.length}/30</Text>
-        </View>
-        <BottomSheetTextInput
-          placeholder="e.g. Trip to Eilat"
-          placeholderTextColor={theme.colors.textSecondary}
-          style={styles.input}
-          maxLength={30}
-          value={groupName}
-          onChangeText={setGroupName}
+        <Controller
+          control={control}
+          name="groupName"
+          render={({
+            field: { onChange: setFormName, value: currentName },
+          }) => (
+            <View>
+              <View style={styles.labelRow}>
+                <Text style={styles.label}>Group name</Text>
+                {errors.groupName ? (
+                  <Text style={{ color: "red", fontSize: 11 }}>
+                    {errors.groupName.message}
+                  </Text>
+                ) : (
+                  <Text style={styles.characterCount}>
+                    {currentName.length}/30
+                  </Text>
+                )}
+              </View>
+              <BottomSheetTextInput
+                placeholder="e.g. Trip to Eilat"
+                placeholderTextColor={theme.colors.textSecondary}
+                style={styles.input}
+                maxLength={30}
+                value={currentName}
+                onChangeText={setFormName}
+              />
+            </View>
+          )}
         />
 
         {/* Group Description Input */}
-        <View style={styles.labelRow}>
-          <View style={styles.leftLabelGroup}>
-            <Text style={styles.label}>Group description</Text>
-            <Text style={styles.optionText}>(optional)</Text>
-          </View>
-          <Text style={styles.characterCount}>
-            {groupDescription.length}/100
-          </Text>
-        </View>
-        <BottomSheetTextInput
-          placeholder="What's this group for?"
-          placeholderTextColor={theme.colors.textSecondary}
-          style={[styles.input, styles.textArea]}
-          multiline
-          numberOfLines={4}
-          value={groupDescription}
-          onChangeText={setGroupDescription}
+        <Controller
+          control={control}
+          name="groupDescription"
+          render={({
+            field: { onChange: setDescription, value: currentDescription = "" },
+          }) => (
+            <View>
+              <View style={styles.labelRow}>
+                <View style={styles.leftLabelGroup}>
+                  <Text style={styles.label}>Group description</Text>
+                  <Text style={styles.optionText}>(optional)</Text>
+                </View>
+                {errors.groupDescription ? (
+                  <Text style={{ color: "red", fontSize: 11 }}>
+                    {errors.groupDescription.message}
+                  </Text>
+                ) : (
+                  <Text style={styles.characterCount}>
+                    {currentDescription.length}/100
+                  </Text>
+                )}
+              </View>
+              <BottomSheetTextInput
+                placeholder="What's this group for?"
+                placeholderTextColor={theme.colors.textSecondary}
+                style={[styles.input, styles.textArea]}
+                multiline
+                numberOfLines={4}
+                value={currentDescription}
+                onChangeText={setDescription}
+              />
+            </View>
+          )}
         />
 
         {/* Members Management System */}
         <View style={styles.memberSectionContainer}>
-          <Text style={styles.label}>Add members</Text>
+          <View style={styles.labelRow}>
+            <Text style={styles.label}>Add members</Text>
+            {errors.friendsInGroup && (
+              <Text style={{ color: "red", fontSize: 11 }}>
+                {errors.friendsInGroup.message}
+              </Text>
+            )}
+          </View>
 
+          {/* Search Bar */}
           {showSelectorRender && (
             <Animated.View
               style={[styles.searchBarContainer, animatedListStyles]}
@@ -240,59 +317,73 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
             </Animated.View>
           )}
 
-          {/* Member Selection Interface - Stretches full-width natively */}
-          {showSelectorRender && (
-            <Animated.View
-              style={[styles.animatedListContainer, animatedListStyles]}
-            >
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.friendsListWrapper}
-              >
-                {homeMock.friendsList.map((friend) => {
-                  const isFriendSelected = friendsInGroup.includes(friend.id);
-                  return (
-                    <Fragment key={friend.id}>
-                      <Pressable
-                        style={styles.friendItemContainer}
-                        onPress={() => {
-                          console.log(friendsInGroup);
-                          const user = friendsInGroup.indexOf(friend.id);
-                          if (user === -1) {
-                            setFriendsInGroup([...friendsInGroup, friend.id]);
-                          } else {
-                            setFriendsInGroup(
-                              friendsInGroup.toSpliced(user, 1)
-                            );
-                          }
-                        }}
-                      >
-                        <Image
-                          style={[
-                            styles.friendListButton,
-                            styles.friendAvatarSize,
-                            isFriendSelected && styles.friendAvatarSelected,
-                          ]}
-                          source={{ uri: friend.image }}
-                        />
-                        <Text style={styles.friendName}>{friend.name}</Text>
-                      </Pressable>
-                    </Fragment>
-                  );
-                })}
-              </ScrollView>
-            </Animated.View>
-          )}
-        </View>
+          <Controller
+            control={control}
+            name="friendsInGroup"
+            render={({
+              field: { onChange: setGroupMembers, value: activeGroupList },
+            }) => {
+              if (!showSelectorRender) return <></>;
 
+              return (
+                <Animated.View
+                  style={[styles.animatedListContainer, animatedListStyles]}
+                >
+                  <ScrollView
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    contentContainerStyle={styles.friendsListWrapper}
+                  >
+                    {homeMock.friendsList.map((friend) => {
+                      const isFriendSelected = activeGroupList.includes(
+                        friend.id
+                      );
+                      return (
+                        <Fragment key={friend.id}>
+                          <Pressable
+                            style={styles.friendItemContainer}
+                            onPress={() => {
+                              const userIndex = activeGroupList.indexOf(
+                                friend.id
+                              );
+                              if (userIndex === -1) {
+                                setGroupMembers([
+                                  ...activeGroupList,
+                                  friend.id,
+                                ]);
+                              } else {
+                                setGroupMembers(
+                                  activeGroupList.toSpliced(userIndex, 1)
+                                );
+                              }
+                            }}
+                          >
+                            <Image
+                              style={[
+                                styles.friendListButton,
+                                styles.friendAvatarSize,
+                                isFriendSelected && styles.friendAvatarSelected,
+                              ]}
+                              source={{ uri: friend.image }}
+                            />
+                            <Text style={styles.friendName}>{friend.name}</Text>
+                          </Pressable>
+                        </Fragment>
+                      );
+                    })}
+                  </ScrollView>
+                </Animated.View>
+              );
+            }}
+          />
+        </View>
         {/* Main Action Button */}
         <Animated.View style={[styles.ctaWrapper, { transform: [{ scale }] }]}>
           <Pressable
             onPressIn={animateIn}
             onPressOut={animateOut}
             style={styles.createButton}
-            onPress={onClose}
+            onPress={handleSubmit(onFormSubmit)} // Validation Interceptor
           >
             <Text style={styles.createButtonText}>Create group</Text>
           </Pressable>

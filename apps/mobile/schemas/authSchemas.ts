@@ -23,3 +23,20 @@ export const loginSchema = z.object({
     .min(8, "Password must be minimum 8 characters")
     .max(16, "Password must be maximum 16 characters"),
 });
+
+export const createGroupSchema = z.object({
+  groupName: z
+    .string()
+    .min(1, "Group name is required")
+    .max(30, "Name cannot exceed 30 characters"),
+  groupDescription: z
+    .string()
+    .max(100, "Description cannot exceed 100 characters")
+    .optional(),
+  selectedIcon: z.string().min(1, "Please pick a group icon image"),
+  friendsInGroup: z
+    .array(z.string())
+    .min(1, "Please select at least one member to join the group"),
+});
+// Create a TypeScript Type derived instantly from your validation constraints
+export type CreateGroupFormData = z.infer<typeof createGroupSchema>;
