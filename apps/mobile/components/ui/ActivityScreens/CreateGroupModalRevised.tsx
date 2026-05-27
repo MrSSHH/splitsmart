@@ -25,7 +25,7 @@ import {
   createGroupSchema,
   CreateGroupFormData,
 } from "./../../../schemas/authSchemas"; // Import schema path
-import { styles } from "./styles/CreateGroupModalRevised.styles";
+import { styles } from "./styles/baseBottomSheetDesign";
 
 type Props = {
   visible: boolean;
@@ -284,39 +284,6 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
             )}
           </View>
 
-          {/* Search Bar */}
-          {showSelectorRender && (
-            <Animated.View
-              style={[styles.searchBarContainer, animatedListStyles]}
-            >
-              <Ionicons
-                name="search-outline"
-                size={18}
-                color={theme.colors.textSecondary}
-                style={styles.searchIcon}
-              />
-              <BottomSheetTextInput
-                placeholder="Search friends by name or email..."
-                placeholderTextColor={theme.colors.textSecondary}
-                style={styles.searchInput}
-                value={query}
-                onChangeText={setQuery}
-              />
-              {query.length > 0 && (
-                <Pressable
-                  onPress={() => setQuery("")}
-                  style={styles.clearButton}
-                >
-                  <Ionicons
-                    name="close-circle"
-                    size={16}
-                    color={theme.colors.textSecondary}
-                  />
-                </Pressable>
-              )}
-            </Animated.View>
-          )}
-
           <Controller
             control={control}
             name="friendsInGroup"
@@ -360,7 +327,6 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
                           >
                             <Image
                               style={[
-                                styles.friendListButton,
                                 styles.friendAvatarSize,
                                 isFriendSelected && styles.friendAvatarSelected,
                               ]}
@@ -376,6 +342,38 @@ export default function CreateGroupModalRevised({ visible, onClose }: Props) {
               );
             }}
           />
+          {/* Search Bar */}
+          {showSelectorRender && (
+            <Animated.View
+              style={[styles.searchBarContainer, animatedListStyles]}
+            >
+              <Ionicons
+                name="search-outline"
+                size={18}
+                color={theme.colors.textSecondary}
+                style={styles.searchIcon}
+              />
+              <BottomSheetTextInput
+                placeholder="Search friends by name or email..."
+                placeholderTextColor={theme.colors.textSecondary}
+                style={styles.searchInput}
+                value={query}
+                onChangeText={setQuery}
+              />
+              {query.length > 0 && (
+                <Pressable
+                  onPress={() => setQuery("")}
+                  style={styles.clearButton}
+                >
+                  <Ionicons
+                    name="close-circle"
+                    size={16}
+                    color={theme.colors.textSecondary}
+                  />
+                </Pressable>
+              )}
+            </Animated.View>
+          )}
         </View>
         {/* Main Action Button */}
         <Animated.View style={[styles.ctaWrapper, { transform: [{ scale }] }]}>

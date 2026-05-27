@@ -64,4 +64,4 @@ export const icons = {
   //
 } as const;
 
-export const groupIcons = ["people", "flight", "home", "restaurant", "cash"];
+export const groupIcons = ["people", "airplane", "home", "restaurant", "cash"];
