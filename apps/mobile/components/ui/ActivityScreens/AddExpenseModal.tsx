@@ -190,6 +190,7 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
               placeholder="Enter item or service name..."
               placeholderTextColor={theme.colors.textSecondary}
               style={styles.formInputBox}
+              onChangeText={setExpenseName}
               value={expenseName}
             />
           </View>
