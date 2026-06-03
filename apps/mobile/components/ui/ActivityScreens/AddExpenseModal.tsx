@@ -19,7 +19,6 @@ import { Dropdown } from "react-native-element-dropdown";
 import { homeMock } from "@/constants/mocks/home";
 import { date, number } from "zod";
 import DateTimePicker from "@react-native-community/datetimepicker";
-
 type Props = {
   visible: boolean;
   onClose: () => void;
@@ -42,7 +41,7 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
   const [isFocus, setIsFocus] = useState(false);
   const [expenseName, setExpenseName] = useState("");
   const [expenseAmount, setExpenseAmount] = useState("");
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [date, setDate] = useState(new Date());
   const [mode, setMode] = useState("date");
   const [show, setShow] = useState(false);
 
@@ -212,9 +211,16 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
 
         <View style={styles.datePickerWrapper}>
           <Text style={styles.label}>Date</Text>
-          <Pressable onPress={showDatepicker}>
-            <Text style={styles.datePickerText}>23-11-2004</Text>
-          </Pressable>
+          <DateTimePicker
+            value={date}
+            mode="date"
+            display="default"
+            onChange={(event, selectedDate) => {
+              if (selectedDate) {
+                setDate(selectedDate);
+              }
+            }}
+          />
         </View>
       </BottomSheetScrollView>
     </BottomSheet>
