@@ -14,8 +14,11 @@ import ViewAllButton from "@/components/ui/ViewAllButton";
 import { Ionicons } from "@expo/vector-icons";
 import CreateGroupModalRevised from "@/components/ui/ActivityScreens/CreateGroupModalRevised";
 import AddExpenseModal from "@/components/ui/ActivityScreens/AddExpenseModal";
+import SettleUpModal from "@/components/ui/ActivityScreens/SettleUpModal";
 export default function Home() {
   const router = useRouter();
+  const [settleUpVisible, setSettleUpVisible] = useState(false);
+  const targetUser = "User";
   useEffect(() => {
     const fetchToken = async () => {
       const storedToken = await getAccessToken();
@@ -95,7 +98,7 @@ export default function Home() {
               icon={icons.settleUp}
               title="Settle up"
               subtitle="Pay or get paid"
-              onPress={() => console.log("Pressed settle up")}
+              onPress={() => setSettleUpVisible(true)}
             />
 
             <ActivityCard
@@ -121,6 +124,14 @@ export default function Home() {
       <AddExpenseModal
         visible={isExpenseModalOpen}
         onClose={() => setIsExpenseModalOpen(false)}
+      />
+
+      <SettleUpModal
+        visible={settleUpVisible}
+        onClose={() => setSettleUpVisible(false)}
+        groupName="Trip to Eilat"
+        defaultPayer="You"
+        defaultReceiver={targetUser}
       />
     </SafeAreaView>
   );
