@@ -323,7 +323,6 @@ export const styles = StyleSheet.create({
   },
   dropdownItemText: {
     fontSize: 15,
-    color: theme.colors.textPrimary,
   },
   dropdownInputSearchField: {
     height: 44,
