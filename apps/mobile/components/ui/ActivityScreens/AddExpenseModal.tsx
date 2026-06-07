@@ -1,34 +1,34 @@
 import React, {
+  useState,
   useRef,
   useMemo,
-  useCallback,
-  useState,
   useEffect,
+  useCallback,
 } from "react";
-import { Pressable, Text, View, StyleSheet } from "react-native";
-
-// --- Third-Party Imports ---
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Platform,
+} from "react-native";
 import BottomSheet, {
   BottomSheetBackdrop,
   BottomSheetBackdropProps,
   BottomSheetScrollView,
-  BottomSheetTextInput,
+  BottomSheetTextInput, // 1. IMPORT THIS CRITICAL COMPONENT
 } from "@gorhom/bottom-sheet";
-import DateTimePicker, {
-  DateTimePickerEvent,
-} from "@react-native-community/datetimepicker";
-import { Dropdown } from "react-native-element-dropdown";
-import { FontAwesome, Ionicons } from "@expo/vector-icons";
-
-// --- Local Imports ---
+import { Ionicons, FontAwesome6, FontAwesome } from "@expo/vector-icons";
 import { theme } from "@/constants/colors";
+import { Dropdown } from "react-native-element-dropdown";
 import { styles as baseStyles } from "./styles/baseBottomSheetDesign";
-import { homeMock } from "@/constants/mocks/home";
 
-// --- Types & Constants ---
 type Props = {
   visible: boolean;
   onClose: () => void;
+  groupName?: string;
+  defaultPayer?: string;
+  defaultReceiver?: string;
 };
 
 const GROUP_DATA = [
@@ -36,20 +36,27 @@ const GROUP_DATA = [
   { label: "אילת עם חברים !", value: "2" },
 ];
 
-export default function AddExpenseModal({ visible, onClose }: Props) {
+export default function SettleUpModal({
+  visible,
+  onClose,
+  groupName = "Trip to Eilat",
+  defaultPayer = "You",
+  defaultReceiver = "Alex Smith",
+}: Props) {
   const bottomSheetRef = useRef<BottomSheet>(null);
-
-  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
-  const [expenseName, setExpenseName] = useState("");
-  const [expenseAmount, setExpenseAmount] = useState("");
-  const [expenseDate, setExpenseDate] = useState(new Date());
-  const [isDropdownFocused, setIsDropdownFocused] = useState(false);
-
   const snapPoints = useMemo(() => ["90%"], []);
 
+  // Form State
+  const [isDropdownFocused, setIsDropdownFocused] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
+  const [amount, setAmount] = useState("");
+  const [notes, setNotes] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("cash");
+
+  // Sync open/close state
   useEffect(() => {
     if (visible) {
-      bottomSheetRef.current?.snapToIndex(0);
+      bottomSheetRef.current?.expand();
     } else {
       bottomSheetRef.current?.close();
     }
@@ -85,199 +92,375 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
       enablePanDownToClose={true}
       backgroundStyle={baseStyles.sheetBackground}
       handleIndicatorStyle={baseStyles.handleIndicator}
-      keyboardBehavior="extend"
+      // 2. These settings handle layout adjustments for both platforms perfectly
+      keyboardBehavior="fillParent"
+      android_keyboardInputMode="adjustResize"
     >
       <BottomSheetScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
           baseStyles.scrollContent,
-          layoutStyles.scrollContainer,
+          styles.scrollContainer,
+          { paddingBottom: Platform.OS === "ios" ? 140 : 80 },
         ]}
         keyboardShouldPersistTaps="handled"
       >
-        {/* --- 1. Header Section --- */}
-        <View style={baseStyles.header}>
-          <Pressable style={baseStyles.closeButton} onPress={onClose}>
-            <Ionicons name="close" size={22} color={theme.colors.textPrimary} />
-          </Pressable>
-          <Text style={baseStyles.title}>Add Expense</Text>
+        {/* Header Container */}
+        <View style={styles.headerContainer}>
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <Ionicons name="close" size={20} color="#FFF" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Settle up</Text>
         </View>
 
-        {/* --- 2. HERO AMOUNT SECTION (Moved to top) --- */}
-        <View style={layoutStyles.heroAmountContainer}>
-          <Text style={layoutStyles.currencySymbol}>{homeMock.currency}</Text>
-          <BottomSheetTextInput
-            placeholder="0.00"
-            placeholderTextColor={theme.colors.textSecondary}
-            style={[baseStyles.formAmountInputBox, layoutStyles.heroInput]}
-            value={expenseAmount}
-            onChangeText={setExpenseAmount}
-            keyboardType="decimal-pad"
-            maxLength={10}
+        {/* Transaction Flow Visualizer */}
+        <View style={styles.flowContainer}>
+          <View style={styles.avatarNode}>
+            <Text style={styles.avatarText}>
+              {defaultPayer[0].toUpperCase()}
+            </Text>
+            <Text style={styles.nodeLabel}>{defaultPayer}</Text>
+          </View>
+
+          <View style={styles.arrowContainer}>
+            <Text style={styles.arrowSubtext}>pays</Text>
+            <Ionicons name="arrow-forward" size={20} color="#5B82F6" />
+          </View>
+
+          <View style={styles.avatarNode}>
+            <View style={[styles.avatarNodeBox, styles.receiverAvatar]}>
+              <Text style={styles.avatarText}>
+                {defaultReceiver[0].toUpperCase()}
+              </Text>
+            </View>
+            <Text style={styles.nodeLabel} numberOfLines={1}>
+              {defaultReceiver}
+            </Text>
+          </View>
+        </View>
+
+        {/* Group Dropdown Section */}
+        <View
+          style={[
+            baseStyles.dropdownMainContainer,
+            { flex: 1.5, marginBottom: 0 },
+          ]}
+        >
+          <Text style={baseStyles.inputFloatingLabel}>Group</Text>
+          <Dropdown
+            style={[
+              baseStyles.dropdownInputBox,
+              isDropdownFocused && {
+                borderColor: theme.colors.tabActive,
+                borderWidth: 2,
+              },
+            ]}
+            activeColor={theme.colors.backgroundDeep}
+            placeholderStyle={baseStyles.dropdownPlaceholder}
+            selectedTextStyle={baseStyles.dropdownSelectedText}
+            containerStyle={baseStyles.dropdownMenuContainer}
+            data={GROUP_DATA}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder={!isDropdownFocused ? "Select group" : "..."}
+            value={selectedGroup}
+            itemTextStyle={{ color: theme.colors.textPrimary }}
+            onFocus={() => setIsDropdownFocused(true)}
+            onBlur={() => setIsDropdownFocused(false)}
+            onChange={(item) => {
+              setSelectedGroup(item.value);
+              setIsDropdownFocused(false);
+            }}
+            renderLeftIcon={() => (
+              <FontAwesome
+                style={baseStyles.dropdownLeftIcon}
+                color={
+                  isDropdownFocused
+                    ? theme.colors.tabActive
+                    : theme.colors.textSecondary
+                }
+                name="group"
+                size={20}
+              />
+            )}
           />
         </View>
 
-        <View style={layoutStyles.formCard}>
-          {/* --- 3. Expense Name Input --- */}
-          <View style={baseStyles.inputContainer}>
-            <View style={layoutStyles.labelRow}>
-              <Text style={baseStyles.inputFloatingLabel}>
-                What was this for?
-              </Text>
-              <Text style={baseStyles.characterCount}>
-                {expenseName.length}/25
-              </Text>
-            </View>
-            <BottomSheetTextInput
-              placeholder="e.g. Dinner, Uber, Groceries..."
-              placeholderTextColor={theme.colors.textSecondary}
-              style={baseStyles.formInputBox}
-              onChangeText={setExpenseName}
-              value={expenseName}
-              maxLength={25}
+        {/* Amount Input */}
+        <View style={styles.labelHeaderRow}>
+          <Text style={styles.inputLabel}>Amount paid</Text>
+          <Text style={styles.characterCounter}>USD</Text>
+        </View>
+        {/* 3. CHANGED TO BottomSheetTextInput */}
+        <BottomSheetTextInput
+          style={styles.textInput}
+          placeholder="$ 0.00"
+          placeholderTextColor="#4A5568"
+          keyboardType="decimal-pad"
+          value={amount}
+          onChangeText={setAmount}
+        />
+
+        {/* Payment Method Segment */}
+        <Text style={styles.inputLabel}>Payment method</Text>
+        <View style={styles.methodRow}>
+          <TouchableOpacity
+            style={[
+              styles.methodBox,
+              paymentMethod === "cash" && styles.methodBoxSelected,
+            ]}
+            onPress={() => setPaymentMethod("cash")}
+          >
+            <FontAwesome6
+              name="money-bill-wave"
+              size={16}
+              color={paymentMethod === "cash" ? "#5B82F6" : "#A0AEC0"}
             />
-          </View>
-
-          {/* --- 4. Side-by-Side: Group & Date --- */}
-          <View style={layoutStyles.rowContainer}>
-            {/* Group Dropdown (Takes up roughly 60% of row) */}
-            <View
+            <Text
               style={[
-                baseStyles.dropdownMainContainer,
-                { flex: 1.5, marginBottom: 0 },
+                styles.methodText,
+                paymentMethod === "cash" && styles.methodTextSelected,
               ]}
             >
-              <Text style={baseStyles.inputFloatingLabel}>Group</Text>
-              <Dropdown
-                style={[
-                  baseStyles.dropdownInputBox,
-                  isDropdownFocused && {
-                    borderColor: theme.colors.tabActive,
-                    borderWidth: 2,
-                  },
-                ]}
-                activeColor={theme.colors.backgroundDeep}
-                placeholderStyle={baseStyles.dropdownPlaceholder}
-                selectedTextStyle={baseStyles.dropdownSelectedText}
-                containerStyle={baseStyles.dropdownMenuContainer}
-                data={GROUP_DATA}
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder={!isDropdownFocused ? "Select group" : "..."}
-                value={selectedGroup}
-                itemTextStyle={{ color: theme.colors.textPrimary }}
-                onFocus={() => setIsDropdownFocused(true)}
-                onBlur={() => setIsDropdownFocused(false)}
-                onChange={(item) => {
-                  setSelectedGroup(item.value);
-                  setIsDropdownFocused(false);
-                }}
-                renderLeftIcon={() => (
-                  <FontAwesome
-                    style={baseStyles.dropdownLeftIcon}
-                    color={
-                      isDropdownFocused
-                        ? theme.colors.tabActive
-                        : theme.colors.textSecondary
-                    }
-                    name="group"
-                    size={20}
-                  />
-                )}
-              />
-            </View>
+              Cash
+            </Text>
+          </TouchableOpacity>
 
-            {/* Date Picker (Takes up 40% of row) */}
-            <View
+          <TouchableOpacity
+            style={[
+              styles.methodBox,
+              paymentMethod === "digital" && styles.methodBoxSelected,
+            ]}
+            onPress={() => setPaymentMethod("digital")}
+          >
+            <FontAwesome6
+              name="credit-card"
+              size={16}
+              color={paymentMethod === "digital" ? "#5B82F6" : "#A0AEC0"}
+            />
+            <Text
               style={[
-                baseStyles.datePickerWrapper,
-                { flex: 1, alignItems: "flex-start" },
+                styles.methodText,
+                paymentMethod === "digital" && styles.methodTextSelected,
               ]}
             >
-              <View style={layoutStyles.datePickerContainer}>
-                <Text style={baseStyles.inputFloatingLabel}>Date</Text>
-
-                <DateTimePicker
-                  value={expenseDate}
-                  mode="date"
-                  display="default"
-                  onChange={(_, selectedDate) =>
-                    selectedDate && setExpenseDate(selectedDate)
-                  }
-                />
-              </View>
-            </View>
-          </View>
+              Digital
+            </Text>
+          </TouchableOpacity>
         </View>
 
-        {/* --- 5. Action Button --- */}
-        <Pressable
-          style={layoutStyles.submitButton}
-          onPress={() => console.log("Save expense")}
-        >
-          <Text style={layoutStyles.submitButtonText}>Add Expense</Text>
-        </Pressable>
+        {/* Optional Notes */}
+        <View style={styles.labelHeaderRow}>
+          <Text style={styles.inputLabel}>
+            Notes <Text style={styles.optionalText}>(optional)</Text>
+          </Text>
+          <Text style={styles.characterCounter}>{notes.length}/100</Text>
+        </View>
+        {/* 4. CHANGED TO BottomSheetTextInput */}
+        <BottomSheetTextInput
+          style={[styles.textInput, styles.textArea]}
+          placeholder="Add a memo or message..."
+          placeholderTextColor="#4A5568"
+          multiline
+          maxLength={100}
+          value={notes}
+          onChangeText={setNotes}
+        />
+
+        {/* Action Button */}
+        <TouchableOpacity style={styles.primaryButton} activeOpacity={0.8}>
+          <Text style={styles.primaryButtonText}>Save settlement</Text>
+        </TouchableOpacity>
       </BottomSheetScrollView>
     </BottomSheet>
   );
 }
 
-// --- Layout Specific Styles ---
-// Merge these into your baseBottomSheetDesign.ts or keep them local
-const layoutStyles = StyleSheet.create({
+const styles = StyleSheet.create({
+  sheetBackground: {
+    backgroundColor: "#161B22",
+    borderTopLeftRadius: 28,
+    borderTopRightRadius: 28,
+    borderWidth: 1,
+    borderColor: "#21262D",
+  },
+  handleIndicator: {
+    width: 48,
+    height: 4,
+    backgroundColor: "#30363D",
+  },
   scrollContainer: {
     paddingHorizontal: 20,
-    paddingBottom: 40,
   },
-  heroAmountContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    marginVertical: 30,
-    gap: 8,
-  },
-  currencySymbol: {
-    fontSize: 40,
-    fontWeight: "600",
-    color: theme.colors.textPrimary,
-    marginBottom: 4, // Aligns baseline with input
-  },
-  heroInput: {
-    fontSize: 48,
-    fontWeight: "700",
-    textAlign: "left",
-    padding: 0,
-    margin: 0,
-    minWidth: 120, // Prevents layout jump when typing
+  scrollContent: {
+    paddingHorizontal: 24,
+    paddingTop: 8,
   },
   formCard: {
-    gap: 24, // Consistent spacing between form fields
-  },
-  labelRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
+    gap: 24,
   },
   rowContainer: {
     flexDirection: "row",
     gap: 16,
     alignItems: "center",
   },
-  datePickerContainer: {
-    height: 50, // Matches standard input height
-    justifyContent: "center",
-  },
-  submitButton: {
-    backgroundColor: theme.colors.tabActive, // Or whatever your primary action color is
-    borderRadius: 12,
-    paddingVertical: 16,
+  headerContainer: {
     alignItems: "center",
-    marginTop: 40,
+    paddingTop: 8,
+    paddingBottom: 20,
+    paddingHorizontal: 24,
   },
-  submitButtonText: {
+  closeButton: {
+    position: "absolute",
+    left: 24,
+    top: 8,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: "#21262D",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  headerTitle: {
+    fontSize: 24,
+    fontWeight: "700",
+    color: "#FFFFFF",
+    marginTop: 4,
+  },
+  flowContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#0D1117",
+    borderRadius: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 16,
+    borderWidth: 1,
+    borderColor: "#21262D",
+    marginTop: 8,
+    marginBottom: 8,
+  },
+  avatarNode: {
+    alignItems: "center",
+    width: 80,
+  },
+  avatarNodeBox: {},
+  avatarText: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: "#21262D",
+    color: "#FFFFFF",
+    textAlign: "center",
+    lineHeight: 48,
+    fontSize: 18,
+    fontWeight: "600",
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: "#30363D",
+  },
+  receiverAvatar: {
+    borderColor: "rgba(91, 130, 246, 0.4)",
+  },
+  nodeLabel: {
+    color: "#F0F6FC",
+    fontSize: 13,
+    fontWeight: "500",
+    marginTop: 8,
+    textAlign: "center",
+  },
+  arrowContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 8,
+  },
+  arrowSubtext: {
+    color: "#8B949E",
+    fontSize: 11,
+    fontWeight: "600",
+    textTransform: "uppercase",
+    letterSpacing: 0.5,
+    marginBottom: 4,
+  },
+  labelHeaderRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 20,
+    marginBottom: 8,
+  },
+  inputLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#F0F6FC",
+    marginTop: 20,
+    marginBottom: 8,
+  },
+  optionalText: {
+    color: "#8B949E",
+    fontWeight: "400",
+    fontSize: 12,
+  },
+  characterCounter: {
+    fontSize: 12,
+    color: "#8B949E",
+  },
+  textInput: {
+    backgroundColor: "#0D1117",
+    color: "#FFFFFF",
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    height: 56,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: "#21262D",
+  },
+  textArea: {
+    height: 80,
+    paddingTop: 14,
+    textAlignVertical: "top",
+  },
+  methodRow: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  methodBox: {
+    flex: 1,
+    flexDirection: "row",
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: "#21262D",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 8,
+    borderWidth: 1,
+    borderColor: "transparent",
+  },
+  methodBoxSelected: {
+    backgroundColor: "rgba(91, 130, 246, 0.15)",
+    borderColor: "#5B82F6",
+  },
+  methodText: {
+    color: "#A0AEC0",
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  methodTextSelected: {
+    color: "#FFFFFF",
+  },
+  primaryButton: {
+    backgroundColor: "#5B82F6",
+    height: 56,
+    borderRadius: 18,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 32,
+  },
+  primaryButtonText: {
     color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "700",
   },
 });

@@ -1,21 +1,40 @@
-import React, { useState, useRef, useMemo, useEffect } from "react";
+import React, {
+  useState,
+  useRef,
+  useMemo,
+  useEffect,
+  useCallback,
+} from "react";
 import {
   StyleSheet,
   Text,
   View,
-  TextInput,
   TouchableOpacity,
+  Platform,
 } from "react-native";
-import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
-import { Ionicons, FontAwesome6 } from "@expo/vector-icons";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  BottomSheetBackdropProps,
+  BottomSheetScrollView,
+  BottomSheetTextInput,
+} from "@gorhom/bottom-sheet";
+import { Ionicons, FontAwesome6, FontAwesome } from "@expo/vector-icons";
+import { theme } from "@/constants/colors";
+import { Dropdown } from "react-native-element-dropdown";
+import { styles as baseStyles } from "./styles/baseBottomSheetDesign";
 
 type Props = {
   visible: boolean;
   onClose: () => void;
-  groupName?: string; // Optional: Pass context of what group they are settling in
+  groupName?: string;
   defaultPayer?: string;
   defaultReceiver?: string;
 };
+
+const GROUP_DATA = [
+  { label: "הוצאות של דייטים", value: "1" },
+  { label: "אילת עם חברים !", value: "2" },
+];
 
 export default function SettleUpModal({
   visible,
@@ -25,12 +44,18 @@ export default function SettleUpModal({
   defaultReceiver = "Alex Smith",
 }: Props) {
   const bottomSheetRef = useRef<BottomSheet>(null);
-  const snapPoints = useMemo(() => ["85%"], []);
+
+  // 1. ADD SCROLLVIEW REFERENCE HOOK
+  const scrollViewRef = useRef<any>(null);
+
+  const snapPoints = useMemo(() => ["90%"], []);
 
   // Form State
+  const [isDropdownFocused, setIsDropdownFocused] = useState(false);
+  const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [amount, setAmount] = useState("");
   const [notes, setNotes] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("cash"); // cash, venmo, paypal
+  const [paymentMethod, setPaymentMethod] = useState("cash");
 
   // Sync open/close state
   useEffect(() => {
@@ -41,31 +66,64 @@ export default function SettleUpModal({
     }
   }, [visible]);
 
+  const handleSheetChange = useCallback(
+    (index: number) => {
+      if (index === -1) onClose();
+    },
+    [onClose]
+  );
+
+  // 2. EXPLICIT AUTOSCROLL COMMAND FOR MULTILINE FIELDS
+  const handleNotesFocus = () => {
+    setTimeout(() => {
+      scrollViewRef.current?.scrollToEnd({ animated: true });
+    }, 150); // Small 150ms delay accommodates standard system keyboard expand animations safely
+  };
+
+  const renderBackdrop = useCallback(
+    (props: BottomSheetBackdropProps) => (
+      <BottomSheetBackdrop
+        {...props}
+        appearsOnIndex={0}
+        disappearsOnIndex={-1}
+        opacity={0.55}
+        pressBehavior="close"
+      />
+    ),
+    []
+  );
+
   return (
     <BottomSheet
       ref={bottomSheetRef}
       index={visible ? 0 : -1}
       snapPoints={snapPoints}
-      backgroundStyle={styles.sheetBackground}
-      handleIndicatorStyle={styles.handleIndicator}
-      enableDynamicSizing={false}
+      onChange={handleSheetChange}
+      backdropComponent={renderBackdrop}
       enablePanDownToClose={true}
-      onChange={(index) => index === -1 && onClose()}
+      backgroundStyle={baseStyles.sheetBackground}
+      handleIndicatorStyle={baseStyles.handleIndicator}
+      keyboardBehavior="fillParent"
+      android_keyboardInputMode="adjustResize"
     >
-      {/* Header Container */}
-      <View style={styles.headerContainer}>
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <Ionicons name="close" size={20} color="#FFF" />
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Settle up</Text>
-        <Text style={styles.headerSubtitle}>{groupName}</Text>
-      </View>
-
       <BottomSheetScrollView
+        ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          baseStyles.scrollContent,
+          styles.scrollContainer,
+          { paddingBottom: Platform.OS === "ios" ? 160 : 100 }, // Extended structural breathing padding
+        ]}
         keyboardShouldPersistTaps="handled"
       >
+        {/* Header Container */}
+        <View style={styles.headerContainer}>
+          <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+            <Ionicons name="close" size={20} color="#FFF" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Settle up</Text>
+        </View>
+
         {/* Transaction Flow Visualizer */}
         <View style={styles.flowContainer}>
           <View style={styles.avatarNode}>
@@ -92,12 +150,60 @@ export default function SettleUpModal({
           </View>
         </View>
 
+        {/* Group Dropdown Section */}
+        <View
+          style={[
+            baseStyles.dropdownMainContainer,
+            { flex: 1.5, marginBottom: 0 },
+          ]}
+        >
+          <Text style={baseStyles.inputFloatingLabel}>Group</Text>
+          <Dropdown
+            style={[
+              baseStyles.dropdownInputBox,
+              isDropdownFocused && {
+                borderColor: theme.colors.tabActive,
+                borderWidth: 2,
+              },
+            ]}
+            activeColor={theme.colors.backgroundDeep}
+            placeholderStyle={baseStyles.dropdownPlaceholder}
+            selectedTextStyle={baseStyles.dropdownSelectedText}
+            containerStyle={baseStyles.dropdownMenuContainer}
+            data={GROUP_DATA}
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder={!isDropdownFocused ? "Select group" : "..."}
+            value={selectedGroup}
+            itemTextStyle={{ color: theme.colors.textPrimary }}
+            onFocus={() => setIsDropdownFocused(true)}
+            onBlur={() => setIsDropdownFocused(false)}
+            onChange={(item) => {
+              setSelectedGroup(item.value);
+              setIsDropdownFocused(false);
+            }}
+            renderLeftIcon={() => (
+              <FontAwesome
+                style={baseStyles.dropdownLeftIcon}
+                color={
+                  isDropdownFocused
+                    ? theme.colors.tabActive
+                    : theme.colors.textSecondary
+                }
+                name="group"
+                size={20}
+              />
+            )}
+          />
+        </View>
+
         {/* Amount Input */}
         <View style={styles.labelHeaderRow}>
           <Text style={styles.inputLabel}>Amount paid</Text>
           <Text style={styles.characterCounter}>USD</Text>
         </View>
-        <TextInput
+        <BottomSheetTextInput
           style={styles.textInput}
           placeholder="$ 0.00"
           placeholderTextColor="#4A5568"
@@ -161,7 +267,7 @@ export default function SettleUpModal({
           </Text>
           <Text style={styles.characterCounter}>{notes.length}/100</Text>
         </View>
-        <TextInput
+        <BottomSheetTextInput
           style={[styles.textInput, styles.textArea]}
           placeholder="Add a memo or message..."
           placeholderTextColor="#4A5568"
@@ -169,6 +275,7 @@ export default function SettleUpModal({
           maxLength={100}
           value={notes}
           onChangeText={setNotes}
+          onFocus={handleNotesFocus}
         />
 
         {/* Action Button */}
@@ -193,13 +300,21 @@ const styles = StyleSheet.create({
     height: 4,
     backgroundColor: "#30363D",
   },
+  scrollContainer: {
+    paddingHorizontal: 20,
+  },
   scrollContent: {
     paddingHorizontal: 24,
     paddingTop: 8,
-    paddingBottom: 60,
   },
-
-  // Header
+  formCard: {
+    gap: 24,
+  },
+  rowContainer: {
+    flexDirection: "row",
+    gap: 16,
+    alignItems: "center",
+  },
   headerContainer: {
     alignItems: "center",
     paddingTop: 8,
@@ -223,13 +338,6 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
     marginTop: 4,
   },
-  headerSubtitle: {
-    fontSize: 14,
-    color: "#8B949E",
-    marginTop: 4,
-  },
-
-  // Transaction Flow UI
   flowContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -247,9 +355,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: 80,
   },
-  avatarNodeBox: {
-    // Dynamic matching fallbacks for custom avatar frames
-  },
+  avatarNodeBox: {},
   avatarText: {
     width: 48,
     height: 48,
@@ -288,8 +394,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
     marginBottom: 4,
   },
-
-  // Labels & Form Elements
   labelHeaderRow: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -328,8 +432,6 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     textAlignVertical: "top",
   },
-
-  // Payment Method Row Segment
   methodRow: {
     flexDirection: "row",
     gap: 12,
@@ -358,8 +460,6 @@ const styles = StyleSheet.create({
   methodTextSelected: {
     color: "#FFFFFF",
   },
-
-  // CTA Button
   primaryButton: {
     backgroundColor: "#5B82F6",
     height: 56,
