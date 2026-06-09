@@ -22,6 +22,9 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { theme } from "@/constants/colors";
 import { styles as baseStyles } from "./styles/baseBottomSheetDesign";
 import { homeMock } from "@/constants/mocks/home";
+import { AddExpenseFormData, addExpenseSchema } from "@/schemas/authSchemas";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // --- Types & Constants ---
 type Props = {
@@ -31,7 +34,7 @@ type Props = {
 
 const GROUP_DATA = [
   { label: "הוצאות של דייטים", value: "1" },
-  { label: "אילת עם חברים !", value: "2" },
+  { label: "אילת עם חברים", value: "2" },
 ];
 
 export default function AddExpenseModal({ visible, onClose }: Props) {
@@ -45,6 +48,15 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
 
   const snapPoints = useMemo(() => ["90%"], []);
 
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<AddExpenseFormData>({
+    resolver: zodResolver(addExpenseSchema),
+    defaultValues: { amount: "0", expenseReason: "", group: 0 },
+  });
   useEffect(() => {
     if (visible) {
       bottomSheetRef.current?.snapToIndex(0);

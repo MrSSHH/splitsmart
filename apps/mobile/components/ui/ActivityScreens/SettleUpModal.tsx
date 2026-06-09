@@ -107,6 +107,7 @@ export default function SettleUpModal({
       android_keyboardInputMode="adjustResize"
     >
       <BottomSheetScrollView
+        // 3. ATTACH THE REF PATH TO THE ENGINE CONTAINER
         ref={scrollViewRef}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={[
@@ -275,6 +276,7 @@ export default function SettleUpModal({
           maxLength={100}
           value={notes}
           onChangeText={setNotes}
+          // 4. ATTACH THE MANUALLY ASSIGNED FOCUS ROUTINE
           onFocus={handleNotesFocus}
         />
 

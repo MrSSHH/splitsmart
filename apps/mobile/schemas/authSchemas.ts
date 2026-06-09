@@ -38,5 +38,13 @@ export const createGroupSchema = z.object({
     .array(z.string())
     .min(1, "Please select at least one member to join the group"),
 });
-// Create a TypeScript Type derived instantly from your validation constraints
+
+export const addExpenseSchema = z.object({
+  amount: z.string().min(1, "Amount is required"),
+  expenseReason: z.string().optional(),
+  group: z.number().min(1, "Please select a group"),
+  date: z.date(),
+});
+
+export type AddExpenseFormData = z.infer<typeof addExpenseSchema>;
 export type CreateGroupFormData = z.infer<typeof createGroupSchema>;
