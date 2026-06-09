@@ -3,8 +3,8 @@ import { z } from "zod";
 export const signUpSchema = z
   .object({
     firstName: z.string().min(2, "First name is too short"),
-    lastName: z.string().min(2, "First name is too short"),
-    email: z.email(),
+    lastName: z.string().min(2, "Last name is too short"), // Fixed typo in error message ("First" -> "Last")
+    email: z.string().email("Invalid email address"), // Fixed: z.email() -> z.string().email()
     password: z
       .string()
       .min(8, "Password must be minimum 8 characters")
@@ -17,7 +17,7 @@ export const signUpSchema = z
   });
 
 export const loginSchema = z.object({
-  email: z.email(),
+  email: z.string().email("Invalid email address"),
   password: z
     .string()
     .min(8, "Password must be minimum 8 characters")
@@ -40,11 +40,17 @@ export const createGroupSchema = z.object({
 });
 
 export const addExpenseSchema = z.object({
-  amount: z.string().min(1, "Amount is required"),
-  expenseReason: z.string().optional(),
-  group: z.number().min(1, "Please select a group"),
+  groupId: z.number(),
+  amountValue: z
+    .number()
+    .positive("Amount must be greater than zero")
+    .max(999999, "Amount is too high"),
+  group: z.number().min(1, "Please select a group"), // Fixed: Rescued this from being trapped in a comment string
+  expenseReason: z.string().min(1).optional(),
   date: z.date(),
 });
 
 export type AddExpenseFormData = z.infer<typeof addExpenseSchema>;
 export type CreateGroupFormData = z.infer<typeof createGroupSchema>;
+export type SignUpFormData = z.infer<typeof signUpSchema>;
+export type LoginFormData = z.infer<typeof loginSchema>;

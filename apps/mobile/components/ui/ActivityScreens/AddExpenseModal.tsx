@@ -23,7 +23,7 @@ import { theme } from "@/constants/colors";
 import { styles as baseStyles } from "./styles/baseBottomSheetDesign";
 import { homeMock } from "@/constants/mocks/home";
 import { AddExpenseFormData, addExpenseSchema } from "@/schemas/authSchemas";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 // --- Types & Constants ---
@@ -42,7 +42,7 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
 
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
   const [expenseName, setExpenseName] = useState("");
-  const [expenseAmount, setExpenseAmount] = useState("");
+  const [expenseAmount, setExpenseAmount] = useState();
   const [expenseDate, setExpenseDate] = useState(new Date());
   const [isDropdownFocused, setIsDropdownFocused] = useState(false);
 
@@ -55,7 +55,12 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
     formState: { errors },
   } = useForm<AddExpenseFormData>({
     resolver: zodResolver(addExpenseSchema),
-    defaultValues: { amount: "0", expenseReason: "", group: 0 },
+    defaultValues: {
+      amountValue: 0.0,
+      expenseReason: "",
+      groupId: 0,
+      date: expenseDate,
+    },
   });
   useEffect(() => {
     if (visible) {
@@ -71,7 +76,9 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
     },
     [onClose]
   );
-
+  const onFormSubmit = (data: AddExpenseFormData) => {
+    console.log("Amazing, we got a full working validated expense !\n" + data);
+  };
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
       <BottomSheetBackdrop
@@ -114,18 +121,34 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
         </View>
 
         {/* --- 2. HERO AMOUNT SECTION (Moved to top) --- */}
-        <View style={layoutStyles.heroAmountContainer}>
-          <Text style={layoutStyles.currencySymbol}>{homeMock.currency}</Text>
-          <BottomSheetTextInput
-            placeholder="0.00"
-            placeholderTextColor={theme.colors.textSecondary}
-            style={[baseStyles.formAmountInputBox, layoutStyles.heroInput]}
-            value={expenseAmount}
-            onChangeText={setExpenseAmount}
-            keyboardType="decimal-pad"
-            maxLength={10}
-          />
-        </View>
+        <Controller
+          control={control}
+          name="amountValue"
+          render={({
+            field: { onChange: setExpenseAmount, value: expenseAmount },
+          }) => (
+            <View style={layoutStyles.heroAmountContainer}>
+              {errors.amountValue && (
+                <Text style={{ color: "red", fontSize: 11 }}>
+                  {errors.amountValue.message}
+                </Text>
+              )}
+              <Text style={layoutStyles.currencySymbol}>
+                {homeMock.currency}
+              </Text>
+
+              <BottomSheetTextInput
+                placeholder="0.00"
+                placeholderTextColor={theme.colors.textSecondary}
+                style={[baseStyles.formAmountInputBox, layoutStyles.heroInput]}
+                value={expenseAmount.toString()}
+                onChangeText={setExpenseAmount}
+                keyboardType="decimal-pad"
+                maxLength={10}
+              />
+            </View>
+          )}
+        />
 
         <View style={layoutStyles.formCard}>
           {/* --- 3. Expense Name Input --- */}
