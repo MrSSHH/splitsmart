@@ -40,17 +40,18 @@ export const createGroupSchema = z.object({
 });
 
 export const addExpenseSchema = z.object({
-  groupId: z.number(),
-  amountValue: z
+  groupId: z.coerce.number().min(1, "Please select a group"),
+  amountValue: z.coerce
     .number()
     .positive("Amount must be greater than zero")
     .max(999999, "Amount is too high"),
-  group: z.number().min(1, "Please select a group"), // Fixed: Rescued this from being trapped in a comment string
   expenseReason: z.string().min(1).optional(),
   date: z.date(),
 });
 
-export type AddExpenseFormData = z.infer<typeof addExpenseSchema>;
+export type AddExpenseFormInput = z.input<typeof addExpenseSchema>;
+export type AddExpenseFormOutput = z.output<typeof addExpenseSchema>;
+
 export type CreateGroupFormData = z.infer<typeof createGroupSchema>;
 export type SignUpFormData = z.infer<typeof signUpSchema>;
 export type LoginFormData = z.infer<typeof loginSchema>;

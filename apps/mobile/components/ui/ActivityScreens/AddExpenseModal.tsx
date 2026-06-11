@@ -22,7 +22,11 @@ import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { theme } from "@/constants/colors";
 import { styles as baseStyles } from "./styles/baseBottomSheetDesign";
 import { homeMock } from "@/constants/mocks/home";
-import { AddExpenseFormData, addExpenseSchema } from "@/schemas/authSchemas";
+import {
+  AddExpenseFormInput,
+  AddExpenseFormOutput,
+  addExpenseSchema,
+} from "@/schemas/authSchemas";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -53,13 +57,13 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<AddExpenseFormData>({
+  } = useForm<AddExpenseFormInput, any, AddExpenseFormOutput>({
     resolver: zodResolver(addExpenseSchema),
     defaultValues: {
-      amountValue: 0.0,
+      amountValue: "" as any, // Initialize as empty so placeholder shows
       expenseReason: "",
-      groupId: 0,
-      date: expenseDate,
+      groupId: "" as any, // Dropdown starts empty
+      date: new Date(), // You don't need the expenseDate state variable anymore!
     },
   });
   useEffect(() => {
@@ -76,7 +80,7 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
     },
     [onClose]
   );
-  const onFormSubmit = (data: AddExpenseFormData) => {
+  const onFormSubmit = (data: AddExpenseFormInput) => {
     console.log("Amazing, we got a full working validated expense !\n" + data);
   };
   const renderBackdrop = useCallback(
@@ -127,25 +131,55 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
           render={({
             field: { onChange: setExpenseAmount, value: expenseAmount },
           }) => (
-            <View style={layoutStyles.heroAmountContainer}>
-              {errors.amountValue && (
-                <Text style={{ color: "red", fontSize: 11 }}>
-                  {errors.amountValue.message}
+            <View
+              style={{ alignItems: "center", width: "100%", marginVertical: 8 }}
+            >
+              {/* The Input Row Container */}
+              <View
+                style={[
+                  layoutStyles.heroAmountContainer,
+                  {
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  },
+                ]}
+              >
+                <Text style={[layoutStyles.currencySymbol, { marginRight: 4 }]}>
+                  {homeMock.currency}
                 </Text>
-              )}
-              <Text style={layoutStyles.currencySymbol}>
-                {homeMock.currency}
-              </Text>
 
-              <BottomSheetTextInput
-                placeholder="0.00"
-                placeholderTextColor={theme.colors.textSecondary}
-                style={[baseStyles.formAmountInputBox, layoutStyles.heroInput]}
-                value={expenseAmount.toString()}
-                onChangeText={setExpenseAmount}
-                keyboardType="decimal-pad"
-                maxLength={10}
-              />
+                <BottomSheetTextInput
+                  placeholder="0.00"
+                  placeholderTextColor={theme.colors.textSecondary}
+                  style={[
+                    baseStyles.formAmountInputBox,
+                    layoutStyles.heroInput,
+                    errors.amountValue && { borderColor: "red" },
+                  ]}
+                  value={expenseAmount ? expenseAmount.toString() : ""}
+                  onChangeText={setExpenseAmount}
+                  keyboardType="decimal-pad"
+                  maxLength={10}
+                />
+              </View>
+
+              <View
+                style={{ height: 18, marginTop: 4, justifyContent: "center" }}
+              >
+                {errors.amountValue ? (
+                  <Text
+                    style={{
+                      color: "red",
+                      fontSize: 12,
+                      fontWeight: "500",
+                      textAlign: "center",
+                    }}
+                  >
+                    {errors.amountValue.message}
+                  </Text>
+                ) : null}
+              </View>
             </View>
           )}
         />
@@ -247,7 +281,7 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
         {/* --- 5. Action Button --- */}
         <Pressable
           style={layoutStyles.submitButton}
-          onPress={() => console.log("Save expense")}
+          onPress={handleSubmit(onFormSubmit)}
         >
           <Text style={layoutStyles.submitButtonText}>Add Expense</Text>
         </Pressable>
