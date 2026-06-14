@@ -144,7 +144,6 @@ export const styles = StyleSheet.create({
     height: 54, // Perfectly unified structure height profile
     borderRadius: 16,
     borderColor: theme.colors.border,
-    paddingHorizontal: 16,
     width: "100%",
   },
   datePickerText: {

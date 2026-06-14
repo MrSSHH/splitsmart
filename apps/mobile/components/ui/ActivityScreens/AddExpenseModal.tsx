@@ -63,7 +63,7 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
       amountValue: "" as any, // Initialize as empty so placeholder shows
       expenseReason: "",
       groupId: "" as any, // Dropdown starts empty
-      date: new Date(), // You don't need the expenseDate state variable anymore!
+      date: new Date(),
     },
   });
   useEffect(() => {
@@ -204,67 +204,95 @@ export default function AddExpenseModal({ visible, onClose }: Props) {
               maxLength={25}
             />
           </View>
+        </View>
 
-          {/* --- 4. Side-by-Side: Group & Date --- */}
-          <View style={layoutStyles.rowContainer}>
-            {/* Group Dropdown (Takes up roughly 60% of row) */}
-            <View
-              style={[
-                baseStyles.dropdownMainContainer,
-                { flex: 1.5, marginBottom: 0 },
-              ]}
-            >
-              <Text style={baseStyles.inputFloatingLabel}>Group</Text>
-              <Dropdown
-                style={[
-                  baseStyles.dropdownInputBox,
-                  isDropdownFocused && {
-                    borderColor: theme.colors.tabActive,
-                    borderWidth: 2,
-                  },
-                ]}
-                activeColor={theme.colors.backgroundDeep}
-                placeholderStyle={baseStyles.dropdownPlaceholder}
-                selectedTextStyle={baseStyles.dropdownSelectedText}
-                containerStyle={baseStyles.dropdownMenuContainer}
-                data={GROUP_DATA}
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder={!isDropdownFocused ? "Select group" : "..."}
-                value={selectedGroup}
-                itemTextStyle={{ color: theme.colors.textPrimary }}
-                onFocus={() => setIsDropdownFocused(true)}
-                onBlur={() => setIsDropdownFocused(false)}
-                onChange={(item) => {
-                  setSelectedGroup(item.value);
-                  setIsDropdownFocused(false);
-                }}
-                renderLeftIcon={() => (
-                  <FontAwesome
-                    style={baseStyles.dropdownLeftIcon}
-                    color={
-                      isDropdownFocused
-                        ? theme.colors.tabActive
-                        : theme.colors.textSecondary
-                    }
-                    name="group"
-                    size={20}
+        {/* --- 4. Side-by-Side: Group & Date --- */}
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            gap: 12,
+          }}
+        >
+          {/* Group Dropdown Column (Takes up 60% of row) */}
+          <View style={{ flex: 6 }}>
+            <Text style={baseStyles.inputFloatingLabel}>Group</Text>
+            <Controller
+              control={control}
+              name="groupId"
+              render={({
+                field: { onChange: setSelectedGroup, value: selectedGroup },
+              }) => (
+                <View>
+                  <Dropdown
+                    style={[
+                      baseStyles.dropdownInputBox,
+                      isDropdownFocused && {
+                        borderColor: theme.colors.tabActive,
+                        borderWidth: 2,
+                      },
+                      errors.groupId && { borderColor: "red" },
+                    ]}
+                    activeColor={theme.colors.backgroundDeep}
+                    placeholderStyle={baseStyles.dropdownPlaceholder}
+                    selectedTextStyle={baseStyles.dropdownSelectedText}
+                    containerStyle={baseStyles.dropdownMenuContainer}
+                    data={GROUP_DATA}
+                    maxHeight={300}
+                    labelField="label"
+                    valueField="value"
+                    placeholder={!isDropdownFocused ? "Select group" : "..."}
+                    value={selectedGroup}
+                    itemTextStyle={{ color: theme.colors.textPrimary }}
+                    onFocus={() => setIsDropdownFocused(true)}
+                    onBlur={() => setIsDropdownFocused(false)}
+                    onChange={(item) => {
+                      setSelectedGroup(item.value);
+                      setIsDropdownFocused(false);
+                    }}
+                    renderLeftIcon={() => (
+                      <FontAwesome
+                        style={baseStyles.dropdownLeftIcon}
+                        color={
+                          isDropdownFocused
+                            ? theme.colors.tabActive
+                            : theme.colors.textSecondary
+                        }
+                        name="group"
+                        size={20}
+                      />
+                    )}
                   />
-                )}
-              />
-            </View>
+                  <View
+                    style={{
+                      height: 18,
+                      marginTop: 4,
+                      justifyContent: "center",
+                    }}
+                  >
+                    {errors.groupId ? (
+                      <Text
+                        style={{
+                          color: "red",
+                          fontSize: 12,
+                          fontWeight: "500",
+                          textAlign: "center",
+                        }}
+                      >
+                        {errors.groupId.message}
+                      </Text>
+                    ) : null}
+                  </View>
+                </View>
+              )}
+            />
+          </View>
 
-            {/* Date Picker (Takes up 40% of row) */}
-            <View
-              style={[
-                baseStyles.datePickerWrapper,
-                { flex: 1, alignItems: "flex-start" },
-              ]}
-            >
+          {/* Date Picker Column (Takes up 40% of row) */}
+          <View style={{ flex: 4 }}>
+            <Text style={baseStyles.inputFloatingLabel}>Date</Text>
+            <View style={[baseStyles.datePickerWrapper]}>
               <View style={layoutStyles.datePickerContainer}>
-                <Text style={baseStyles.inputFloatingLabel}>Date</Text>
-
                 <DateTimePicker
                   value={expenseDate}
                   mode="date"
